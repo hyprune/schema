@@ -18,3 +18,11 @@ Frozen IPC 0.3 adds verified shell Wayland-child binding, workspace activation,
 revisioned safe inline map/metadata, selected-output descriptor and core-projected
 markers. 0.1/0.2 and world formats remain frozen. New positive/negative tests cover
 version isolation, reserved parameters, PID/workspace bounds and marker clipping.
+
+## 0.4.0 (M2)
+
+- World format 0.3: workspace homes, typed mounts/frames/limits, reserved placement
+  volumes, camera-relative atmosphere, HDR bloom/exposure and static sky IBL.
+- IPC 0.4: workspace bindings/focus, pull/place/return/recall, durable placement
+  rules, data-object bindings, atmosphere and FOV. Older wire contracts stay frozen.
+- Added independent ownership/interaction/limits and version-isolation tests.
