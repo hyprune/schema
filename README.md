@@ -44,3 +44,12 @@ This is not a runtime transport parser or package installer. It does not check d
 Update RFC + schema + positive/negative tests + [CHANGELOG.md](CHANGELOG.md) together. Consumers pin a schema commit/release. New structural or semantic contracts get a new protocol/format identifier; never quietly redefine a released one. docs mirrors these exact files with a recorded source commit and checksums. M0/WIP commits are deliberately available before implementation.
 
 MIT; see [LICENSE](LICENSE).
+
+M1 contracts are frozen separately under `v0.2/`. Select them explicitly:
+
+```js
+validate('ipc', frame, responseMethod, '0.2');
+validate('world', manifest, undefined, '0.2');
+```
+
+CLI: `npm run validate -- world world.json - 0.2`. Existing default calls continue validating 0.1. Wire protocol and package format versions are independent.
