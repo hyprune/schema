@@ -11,3 +11,10 @@ Adds frozen `v0.2/` schemas for IPC 0.2 and world format 0.2; `v0/` stays unchan
 IPC adds camera get/set, waypoint/route, travel, autodrive, ui.open/close, data.publish/remove and presentation notifications. `location` and `integrations` are revisioned state keys. Publishing requires its own capability; scalar values, TTL, sequence and ownership are specified by RFC-0003. World 0.2 has the same manifest shape, with RFC-0004's sampler/transform/PBR material semantics. No mock-only protocol is accepted.
 
 M1 shell reconciliation adds stable transition IDs, output identity, monotonic timestamps and indeterminate loading/failed phases. World-load destinations remain distinct from point/zone navigation targets.
+
+## 0.3.0 — first real session
+
+Frozen IPC 0.3 adds verified shell Wayland-child binding, workspace activation,
+revisioned safe inline map/metadata, selected-output descriptor and core-projected
+markers. 0.1/0.2 and world formats remain frozen. New positive/negative tests cover
+version isolation, reserved parameters, PID/workspace bounds and marker clipping.

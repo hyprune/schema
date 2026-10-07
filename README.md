@@ -53,3 +53,8 @@ validate('world', manifest, undefined, '0.2');
 ```
 
 CLI: `npm run validate -- world world.json - 0.2`. Existing default calls continue validating 0.1. Wire protocol and package format versions are independent.
+
+First-session IPC `0.3` lives in `v0.3/{common,ipc}.schema.json` and is selected with
+`validate('ipc', frame, method, '0.3')`. It adds verified shell-child binding,
+workspace locations and bounded map/projection/output descriptors. World format
+selection remains 0.1/0.2; optional Map metadata is documented in RFC-0004/0008.
