@@ -20,3 +20,10 @@ test('0.4 methods are isolated and have closed params',()=>{
  }
  assert.equal(validate('ipc',{jsonrpc:'2.0',id:'1',method:'camera.fov',params:{degrees:120}},undefined,'0.4').valid,false);
 });
+
+test('0.3 declarative data objects belong to one home',()=>{
+ const w=world();w.dataObjects=[{id:'globe',areaId:'sun-court',pose:{position:[1,1,1],rotation:[0,0,0,1]},mount:{type:'globe',role:'data-object',interaction:'none'}}];w.areas[0].dataAnchors=['globe'];
+ assert.equal(validate('world',w,undefined,'0.3').valid,true);
+ const invalid=structuredClone(w);invalid.dataObjects[0].areaId='other';assert.equal(validate('world',invalid,undefined,'0.3').valid,false);
+ w.dataObjects[0].mount.interaction='in-place';assert.equal(validate('world',w,undefined,'0.3').valid,false);
+});
