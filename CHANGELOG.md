@@ -9,3 +9,5 @@ Initial JSON Schema 2020-12 family: world format `0.1`, IPC `0.1`, extension man
 Adds frozen `v0.2/` schemas for IPC 0.2 and world format 0.2; `v0/` stays unchanged. The validator accepts an optional fourth `version` argument (default `0.1`); CLI accepts `[response-method|-] [contract-version]`.
 
 IPC adds camera get/set, waypoint/route, travel, autodrive, ui.open/close, data.publish/remove and presentation notifications. `location` and `integrations` are revisioned state keys. Publishing requires its own capability; scalar values, TTL, sequence and ownership are specified by RFC-0003. World 0.2 has the same manifest shape, with RFC-0004's sampler/transform/PBR material semantics. No mock-only protocol is accepted.
+
+M1 shell reconciliation adds stable transition IDs, output identity, monotonic timestamps and indeterminate loading/failed phases. World-load destinations remain distinct from point/zone navigation targets.

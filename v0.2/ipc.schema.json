@@ -1894,22 +1894,56 @@
             "departing",
             "travelling",
             "arrived",
-            "cancelled"
+            "cancelled",
+            "loading",
+            "failed"
           ]
         },
         "progress": {
-          "type": "number",
-          "minimum": 0,
-          "maximum": 1
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          ]
         },
         "to": {
-          "$ref": "#/$defs/target"
+          "$ref": "#/$defs/destination"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "outputId": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            }
+          ]
+        },
+        "monotonicMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
         }
       },
       "required": [
         "phase",
         "progress",
-        "to"
+        "to",
+        "id",
+        "outputId",
+        "monotonicMs"
       ],
       "additionalProperties": false
     },
@@ -3252,16 +3286,25 @@
                 "departing",
                 "travelling",
                 "arrived",
-                "cancelled"
+                "cancelled",
+                "loading",
+                "failed"
               ]
             },
             "progress": {
-              "type": "number",
-              "minimum": 0,
-              "maximum": 1
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              ]
             },
             "to": {
-              "$ref": "#/$defs/target"
+              "$ref": "#/$defs/destination"
             },
             "sessionId": {
               "type": "string",
@@ -3272,6 +3315,28 @@
               "type": "integer",
               "minimum": 0,
               "maximum": 9007199254740991
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "outputId": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                }
+              ]
+            },
+            "monotonicMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
             }
           },
           "required": [
@@ -3279,7 +3344,10 @@
             "progress",
             "to",
             "sessionId",
-            "revision"
+            "revision",
+            "id",
+            "outputId",
+            "monotonicMs"
           ],
           "additionalProperties": false
         }
@@ -3475,6 +3543,28 @@
         "params"
       ],
       "additionalProperties": false
+    },
+    "destination": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/target"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "worldId": {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            "spawnId": {
+              "$ref": "common.schema.json#/$defs/slug"
+            }
+          },
+          "required": [
+            "worldId"
+          ],
+          "additionalProperties": false
+        }
+      ]
     }
   }
 }

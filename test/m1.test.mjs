@@ -13,6 +13,6 @@ test('0.2 methods are explicit; 0.1 stays frozen',()=>{
  check('data.publish',{sourceId:'org.example.metrics',sequence:1,values:{},ttlMs:1},false);
 });
 test('warp notifications carry session/revision and bounded progress',()=>{
- let j={jsonrpc:'2.0',method:'location.transition',params:{sessionId:'s',revision:2,phase:'travelling',progress:.5,to:{zoneId:'yard'}}};
+ let j={jsonrpc:'2.0',method:'location.transition',params:{sessionId:'s',revision:2,id:'transition-1',outputId:'output-1',monotonicMs:100,phase:'travelling',progress:.5,to:{zoneId:'yard'}}};
  assert.equal(validate('ipc',j,undefined,'0.2').valid,true);j.params.progress=2;assert.equal(validate('ipc',j,undefined,'0.2').valid,false);
 });
