@@ -34,7 +34,8 @@
           "$ref": "common.schema.json#/$defs/path"
         },
         {
-          "pattern": "\\.(gltf|glb)$"
+          "pattern": "\\.(gltf|glb)$",
+          "type": "string"
         }
       ]
     },
@@ -261,7 +262,8 @@
                 "$ref": "common.schema.json#/$defs/path"
               },
               {
-                "pattern": "\\.(ogg|wav)$"
+                "pattern": "\\.(ogg|wav)$",
+                "type": "string"
               }
             ]
           },
