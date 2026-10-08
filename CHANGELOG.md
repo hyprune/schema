@@ -26,3 +26,10 @@ version isolation, reserved parameters, PID/workspace bounds and marker clipping
 - IPC 0.4: workspace bindings/focus, pull/place/return/recall, durable placement
   rules, data-object bindings, atmosphere and FOV. Older wire contracts stay frozen.
 - Added independent ownership/interaction/limits and version-isolation tests.
+
+## 0.5.0 (M3A)
+
+Frozen IPC 0.5 adds revisioned interaction mode/tool state, workspace app metadata,
+and custom surface pose/size placement rules. All prior schemas stay unchanged;
+world format remains 0.3. Tests cover exact version isolation, closed objects,
+bounded app/tool collections and complete custom placement records.

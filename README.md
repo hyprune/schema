@@ -58,3 +58,9 @@ First-session IPC `0.3` lives in `v0.3/{common,ipc}.schema.json` and is selected
 `validate('ipc', frame, method, '0.3')`. It adds verified shell-child binding,
 workspace locations and bounded map/projection/output descriptors. World format
 selection remains 0.1/0.2; optional Map metadata is documented in RFC-0004/0008.
+
+## M3A contract
+
+`v0.5/ipc.schema.json` adds hands-on interaction and workspace app state, plus
+custom pose placements. Select version `0.5` explicitly; earlier contracts and
+world format 0.3 remain frozen. App icons are theme names, not arbitrary URLs.
