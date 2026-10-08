@@ -38,3 +38,5 @@ test('core overlay theme is lease scoped, bounded, and 0.6 only',()=>{
  for(const style of [{routeColor:[2,0,0]},{iconAtlas:{path:'relative',cellSize:32,waypointIndex:1,promptIndex:2}},{fontFamily:'\n'},{unknown:true}])assert.equal(validate('ipc',req('overlay.style',{leaseId:'x',style}),undefined,'0.6').valid,false);
  assert.equal(validate('ipc',req('input.set',{config:{...config,show_area_markers:false}}),undefined,'0.6').valid,true);
 });
+
+test('overlay style is advertised in the 0.6 hello contract',()=>{assert.ok(JSON.parse(readFileSync(new URL('../v0.6/ipc.schema.json',import.meta.url))).$defs['session.hello.result'].properties.methods.items.enum.includes('overlay.style'));});

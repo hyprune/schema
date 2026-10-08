@@ -402,7 +402,8 @@
               "input.preview",
               "input.set",
               "input.capture",
-              "input.capture.cancel"
+              "input.capture.cancel",
+              "overlay.style"
             ]
           },
           "minItems": 0,
