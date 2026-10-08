@@ -2,7 +2,8 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {validate} from '../lib/validate.mjs';
-const config=JSON.parse(readFileSync(new URL('../../core/config/input.default.json',import.meta.url)));
+const inputSchema=JSON.parse(readFileSync(new URL('../v0.6/input.schema.json',import.meta.url)));
+const config={version:2,longHoldMs:1000,scopeVignette:true,useDistance:6,useTolerance:.12,captureInputLimit:256,modes:Object.fromEntries(Object.entries(inputSchema.properties.modes.properties).map(([mode,s])=>[mode,Object.fromEntries(Object.keys(s.properties).map(action=>[action,[]]))]))};
 const req=(method,params)=>({jsonrpc:'2.0',id:'test',method,params});
 test('0.6 input config is versioned, closed and limits three variants',()=>{
  assert.equal(validate('ipc',req('input.set',{config}),undefined,'0.6').valid,true);
