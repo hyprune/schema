@@ -64,3 +64,7 @@ selection remains 0.1/0.2; optional Map metadata is documented in RFC-0004/0008.
 `v0.5/ipc.schema.json` adds hands-on interaction and workspace app state, plus
 custom pose placements. Select version `0.5` explicitly; earlier contracts and
 world format 0.3 remain frozen. App icons are theme names, not arbitrary URLs.
+
+IPC **0.12** adds recording/replay control and `record.toggle`; 0.11 remains the
+climbing contract. Both inherit the 0.10 Performance API. Record/replay mutations
+require `input.control`; ordinary observers cannot start capture or replay.

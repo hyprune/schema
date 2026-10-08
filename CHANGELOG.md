@@ -49,3 +49,12 @@ feet-position exits, material type and optional speed. Runtime validates capsule
 clearance against world collision. IPC 0.11 adds version-isolated movement
 activity, ladder identity and interaction prompt fields. Previous versions stay
 unchanged. See `test/climbing.test.mjs` and RFC-0004/0006.
+
+## IPC 0.12 — deterministic input and camera recordings
+
+Extends frozen IPC 0.11 (climbing) with input.control-gated recording.start/stop/
+mark/status and replay.start/stop/status, bounded assertion specs, and the
+unbound record.toggle action in every input mode. Older keymaps are projected
+without that action. Runtime records are private, versioned JSONL, with app
+keystrokes masked by default. Replay uses a fixed 60 Hz clock; camera-only
+replay never forwards input. Existing 0.11 movement activity remains inherited.
