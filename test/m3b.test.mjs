@@ -30,3 +30,11 @@ test('optional invert Y and diagnostics in every mode keep older keymaps valid',
  const old=structuredClone(config);for(const m of ['interactive','focus','menu']){delete old.modes[m].debug;delete old.modes[m].capture;}
  assert.equal(validate('ipc',req('input.set',{config:old}),undefined,'0.6').valid,true);
 });
+
+test('core overlay theme is lease scoped, bounded, and 0.6 only',()=>{
+ const theme={leaseId:'shell-lease',style:{fontFamily:'DejaVu Sans',waypointColor:[1,.5,0],iconAtlas:{path:'/home/owner/icons.png',cellSize:32,waypointIndex:1,promptIndex:2}}};
+ assert.equal(validate('ipc',req('overlay.style',theme),undefined,'0.6').valid,true);
+ for(const version of ['0.1','0.2','0.3','0.4','0.5'])assert.equal(validate('ipc',req('overlay.style',theme),undefined,version).valid,false);
+ for(const style of [{routeColor:[2,0,0]},{iconAtlas:{path:'relative',cellSize:32,waypointIndex:1,promptIndex:2}},{fontFamily:'\n'},{unknown:true}])assert.equal(validate('ipc',req('overlay.style',{leaseId:'x',style}),undefined,'0.6').valid,false);
+ assert.equal(validate('ipc',req('input.set',{config:{...config,show_area_markers:false}}),undefined,'0.6').valid,true);
+});
