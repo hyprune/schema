@@ -17,3 +17,10 @@ test('capture requires a mode action slot and lease; response context stays exac
  assert.equal(validate('ipc',frame,'input.preview','0.6').valid,true);
  assert.equal(validate('ipc',frame,'input.set','0.6').valid,false);
 });
+
+test('0.6 desktop app inventory includes uncaptured clients and remains bounded',()=>{
+ const frame=count=>({jsonrpc:'2.0',method:'state.delta',params:{subscriptionId:'sub',sessionId:'session',baseRevision:1,revision:2,changes:{apps:Array.from({length:count},(_,i)=>({surfaceId:`desktop-window-${i}`,workspaceId:1+i%3,title:'Terminal',appClass:'kitty',icon:'kitty'}))}}});
+ assert.equal(validate('ipc',frame(128),undefined,'0.6').valid,true);
+ assert.equal(validate('ipc',frame(129),undefined,'0.6').valid,false);
+ assert.equal(validate('ipc',frame(17),undefined,'0.5').valid,false);
+});
