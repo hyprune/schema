@@ -35,3 +35,9 @@ world format remains 0.3. Tests cover exact version isolation, closed objects,
 bounded app/tool collections and complete custom placement records.
 
 IPC 0.6 (M3B): independent input keymap v2, three variants per action, core-owned validated persistence and lease-bound capture; closed keymap/editor state, per-area paths and object transforms, scope FOV down to 3 degrees, Map opening intent. Older contracts remain byte-identical.
+
+IPC 0.7 publishes the exact shell graphics handoff: discoverable presets/effects,
+validated sparse `graphics.set`, effective settings and asynchronous GPU timings.
+IPC 0.8 adds `keymap.holds` (monotonic start time and configured duration) for
+shell-owned hold animation. Protocols through 0.7 retain their exact shapes;
+world format remains 0.3. No compositor config reload is involved.
