@@ -41,3 +41,11 @@ validated sparse `graphics.set`, effective settings and asynchronous GPU timings
 IPC 0.8 adds `keymap.holds` (monotonic start time and configured duration) for
 shell-owned hold animation. Protocols through 0.7 retain their exact shapes;
 world format remains 0.3. No compositor config reload is involved.
+
+## Climbing: world 0.4 and IPC 0.11
+
+World 0.4 adds validated oriented climbable segments, climb-face normals,
+feet-position exits, material type and optional speed. Runtime validates capsule
+clearance against world collision. IPC 0.11 adds version-isolated movement
+activity, ladder identity and interaction prompt fields. Previous versions stay
+unchanged. See `test/climbing.test.mjs` and RFC-0004/0006.
