@@ -1,3 +1,4 @@
+import {readFileSync} from 'node:fs';
 import test from 'node:test';import assert from 'node:assert/strict';import {validate} from '../lib/validate.mjs';
 const req=(method,params)=>({jsonrpc:'2.0',id:'r',method,params});
 test('record/replay is isolated to 0.12 and inherits 0.11',()=>{
@@ -8,4 +9,14 @@ test('record/replay is isolated to 0.12 and inherits 0.11',()=>{
  assert.equal(validate('ipc',req('recording.start',{includeAppKeys:'yes'}),undefined,'0.12').valid,false);
  const result={recording:false,playing:false,path:'/tmp/session.jsonl',frame:120,mode:'input',failures:[],error:null};
  assert.equal(validate('ipc',{jsonrpc:'2.0',id:'r',result},'replay.status','0.12').valid,true);
+});
+
+test('0.12 cursor mode and world toggle defaults',()=>{
+ const defs=JSON.parse(readFileSync(new URL('../v0.12/ipc.schema.json',import.meta.url))).$defs;
+ assert.equal(validate('ipc',req('replay.start',{path:'/tmp/test',assertions:{marks:{free:{mode:'cursor'}}}}),undefined,'0.12').valid,true);
+ assert.ok(defs.editor.properties.mode.enum.includes('cursor'));
+ assert.ok(defs.interaction.properties.mode.enum.includes('cursor'));
+ assert.ok(defs.inputConfig.properties.modes.properties.world.required.includes('exit'));
+ const old=JSON.parse(readFileSync(new URL('../v0.11/ipc.schema.json',import.meta.url))).$defs;
+ assert.ok(!old.editor.properties.mode.enum.includes('cursor'));
 });
