@@ -33,3 +33,5 @@ Frozen IPC 0.5 adds revisioned interaction mode/tool state, workspace app metada
 and custom surface pose/size placement rules. All prior schemas stay unchanged;
 world format remains 0.3. Tests cover exact version isolation, closed objects,
 bounded app/tool collections and complete custom placement records.
+
+IPC 0.6 (M3B): independent input keymap v2, three variants per action, core-owned validated persistence and lease-bound capture; closed keymap/editor state, per-area paths and object transforms, scope FOV down to 3 degrees, Map opening intent. Older contracts remain byte-identical.
