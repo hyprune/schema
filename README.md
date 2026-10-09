@@ -84,3 +84,8 @@ world format remains 0.5 and previous IPC schemas remain frozen.
 use the current world's authored style. The revision-response envelope uses
 `anyOf` so shared `{revision:...}` responses are unambiguous; per-method validation
 still supplies the result type.
+
+World format **0.6** adds optional `playable` eye-position volumes (boxes or convex
+hulls), per-area regions and maximum fly height, plus explicit `backdrop.farCards`
+node declarations. IPC remains 0.15; authoring geometry is not added to IPC area
+records. See RFC-0004 for composition, limits and motion semantics.
