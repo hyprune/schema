@@ -353,7 +353,17 @@
         "capabilities": {
           "type": "array",
           "items": {
-            "$ref": "https://hyprune.com/schema/v0.6/common.schema.json#/$defs/capability"
+            "enum": [
+              "state.read",
+              "world.control",
+              "surface.control",
+              "movement.control",
+              "shell.control",
+              "runtime.control",
+              "data.publish",
+              "input.control",
+              "camera.author"
+            ]
           },
           "minItems": 0,
           "uniqueItems": true
@@ -386,7 +396,17 @@
         "capabilities": {
           "type": "array",
           "items": {
-            "$ref": "https://hyprune.com/schema/v0.6/common.schema.json#/$defs/capability"
+            "enum": [
+              "state.read",
+              "world.control",
+              "surface.control",
+              "movement.control",
+              "shell.control",
+              "runtime.control",
+              "data.publish",
+              "input.control",
+              "camera.author"
+            ]
           },
           "minItems": 0,
           "uniqueItems": true
@@ -452,7 +472,9 @@
               "recording.status",
               "replay.start",
               "replay.stop",
-              "replay.status"
+              "replay.status",
+              "camera.photo",
+              "camera.release"
             ]
           },
           "minItems": 0,

@@ -24,3 +24,8 @@ test('world 0.5 validates ink and directed visibility regions',()=>{
  world.visibility.areas[0].visibleFrom=[];
  world.visibility.areas.push({...world.visibility.areas[0],id:'second'});assert.equal(validate('world',world,undefined,'0.5').valid,false);
 });
+test('dev capability and methods are advertised in the new hello contract',()=>{
+ const params={protocols:['0.13'],client:{id:'org.example.author',name:'Author'},capabilities:['camera.author','state.read']};
+ assert.equal(validate('ipc',request('session.hello',params),undefined,'0.13').valid,true);
+ assert.equal(validate('ipc',request('session.hello',params),undefined,'0.12').valid,false);
+});
