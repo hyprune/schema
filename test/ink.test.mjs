@@ -2,6 +2,7 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {validate} from '../lib/validate.mjs';
+import Ajv2020 from 'ajv/dist/2020.js';
 const request=patch=>({jsonrpc:'2.0',id:'ink',method:'graphics.set',params:{patch}});
 test('IPC 0.14 outline tiers validate and older contracts stay frozen',()=>{
  for(const value of ['fast','smooth',null]) {
@@ -24,5 +25,9 @@ test('persistent ink overrides are bounded and resettable',()=>{
 
 test('Performance controls accept bounded RGB requested and effective values',()=>{
  const schema=JSON.parse(readFileSync(new URL('../v0.14/ipc.schema.json',import.meta.url)));
- for(const key of ['requested','effective'])assert.ok(schema.$defs.performanceControl.properties[key].anyOf.some(v=>v.type==='array' && v.minItems===3 && v.maxItems===3));
+ const check=new Ajv2020().compile(schema.$defs.performanceControl);
+ const control={requested:null,effective:[.2,.4,.6],gpuMs:1.1,sharedPass:'outline',passGpuMs:1.1};
+ assert.equal(check(control),true);
+ assert.equal(check({...control,requested:[0,0,1]}),true);
+ for(const effective of [[0,0],[0,0,1,1],[0,-1,0],[0,0,2]])assert.equal(check({...control,effective}),false);
 });
