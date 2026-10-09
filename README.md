@@ -97,3 +97,7 @@ optimised scene assets: `KHR_texture_basisu` (KTX2, material textures only),
 `npm run validate -- scene scene.gltf - 0.7 world.json`) checks
 `extensionsRequired` and lightmap textures against the world format. Version
 gates use `atLeast()`; see RFC-0004 "world 0.7".
+
+IPC **0.16** adds the `upscaler` graphics key (`"fsr1"`, `"bilinear"` or `null` to
+inherit the preset) to `graphicsConfig`/`graphicsPatch`. Every 0.15 definition is
+otherwise unchanged; earlier schemas stay frozen. See RFC-0003/0008 amendments.
