@@ -78,3 +78,9 @@ IPC **0.14** adds nullable `graphics.outline_quality` (`fast` or `smooth`).
 Fast keeps a one-logical-pixel stroke; smooth honours the world's 1–4 px width.
 Low/Medium inherit fast, High/Ultra smooth. This is a graphics-only revision;
 world format remains 0.5 and previous IPC schemas remain frozen.
+
+0.14 also adds nullable `outline_width_px` (1–4) and `outline_colour` (three
+0–1 display RGB values). These are persistent user graphics overrides; null means
+use the current world's authored style. The revision-response envelope uses
+`anyOf` so shared `{revision:...}` responses are unambiguous; per-method validation
+still supplies the result type.
