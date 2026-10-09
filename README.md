@@ -68,3 +68,8 @@ world format 0.3 remain frozen. App icons are theme names, not arbitrary URLs.
 IPC **0.12** adds recording/replay control and `record.toggle`; 0.11 remains the
 climbing contract. Both inherit the 0.10 Performance API. Record/replay mutations
 require `input.control`; ordinary observers cannot start capture or replay.
+
+IPC **0.13** adds dev-only `camera.author` grants (`camera.photo`/`camera.release`),
+actual camera roll/FOV/lens shift, and Performance controls for ink and visibility.
+World **0.5** adds optional `atmosphere.outline` and directed visibility regions.
+Older schemas remain frozen. Photo grants are not part of a normal shell grant.

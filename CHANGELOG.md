@@ -58,3 +58,13 @@ unbound record.toggle action in every input mode. Older keymaps are projected
 without that action. Runtime records are private, versioned JSONL, with app
 keystrokes masked by default. Replay uses a fixed 60 Hz clock; camera-only
 replay never forwards input. Existing 0.11 movement activity remains inherited.
+
+## IPC 0.13 and world 0.5 — generic authoring and rendering controls
+
+- Capability-gated photo-camera hold with normalized quaternion, 5–140° vertical
+  FOV, NDC lens shift and fixed render scale; camera.get reports actual lens state.
+- Optional authored depth/normal ink style and Performance override/cost.
+- Explicit visibility areas with bounds, scene-node subtrees and visibleFrom
+  lists. Unassigned geometry and cameras outside areas remain visible.
+- Prior world and IPC schemas are unchanged; positive/negative tests cover the
+  new bounds, links, ownership and closed fields.
