@@ -89,3 +89,11 @@ World format **0.6** adds optional `playable` eye-position volumes (boxes or con
 hulls), per-area regions and maximum fly height, plus explicit `backdrop.farCards`
 node declarations. IPC remains 0.15; authoring geometry is not added to IPC area
 records. See RFC-0004 for composition, limits and motion semantics.
+
+World format **0.7** keeps the 0.6 world.json shape and allows compressed and
+optimised scene assets: `KHR_texture_basisu` (KTX2, material textures only),
+`EXT_meshopt_compression` and `KHR_mesh_quantization`. Lightmaps stay PNG.
+`validate('scene', gltf, undefined, worldFormat, {world})` (CLI:
+`npm run validate -- scene scene.gltf - 0.7 world.json`) checks
+`extensionsRequired` and lightmap textures against the world format. Version
+gates use `atLeast()`; see RFC-0004 "world 0.7".

@@ -75,3 +75,14 @@ Adds generic tool declarations, bounded pocket/client feedback, canonical shared
 Primary/Secondary/Alternate/Cycle bindings and optional persistent placement
 content dimensions. Earlier IPC schemas stay byte-for-byte frozen. World format
 is unchanged (0.5).
+
+## World 0.7 — 2026-10-09
+
+`v0.7/world.schema.json` (world.json shape as 0.6, `formatVersion: "0.7"`) and
+`v0.7/common.schema.json` (0.6 definitions). New `scene` validation kind checks a
+package's `scene.gltf` against its world format: 0.7 may require
+`KHR_texture_basisu` (KTX2 material textures), `EXT_meshopt_compression` and
+`KHR_mesh_quantization`, and must list those it uses in `extensionsRequired`;
+lightmap textures stay PNG in every v0 format. Exports `atLeast()`,
+`worldFormats` and `sceneExtensions()` so version gates are not hard-coded lists.
+Inheritance test: every valid 0.6 document is valid as 0.7. IPC is unchanged.
