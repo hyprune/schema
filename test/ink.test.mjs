@@ -21,3 +21,8 @@ test('persistent ink overrides are bounded and resettable',()=>{
   assert.equal(validate('ipc',request(patch),undefined,'0.14').valid,false);
  assert.equal(validate('ipc',{jsonrpc:'2.0',id:'a',result:{revision:5}},undefined,'0.14').valid,true);
 });
+
+test('Performance controls accept bounded RGB requested and effective values',()=>{
+ const schema=JSON.parse(readFileSync(new URL('../v0.14/ipc.schema.json',import.meta.url)));
+ for(const key of ['requested','effective'])assert.ok(schema.$defs.performanceControl.properties[key].anyOf.some(v=>v.type==='array' && v.minItems===3 && v.maxItems===3));
+});
