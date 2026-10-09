@@ -68,3 +68,10 @@ replay never forwards input. Existing 0.11 movement activity remains inherited.
   lists. Unassigned geometry and cameras outside areas remain visible.
 - Prior world and IPC schemas are unchanged; positive/negative tests cover the
   new bounds, links, ownership and closed fields.
+
+## IPC 0.15 — tool slots, pocket queue and content sizing
+
+Adds generic tool declarations, bounded pocket/client feedback, canonical shared
+Primary/Secondary/Alternate/Cycle bindings and optional persistent placement
+content dimensions. Earlier IPC schemas stay byte-for-byte frozen. World format
+is unchanged (0.5).
