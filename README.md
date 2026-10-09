@@ -73,3 +73,8 @@ IPC **0.13** adds dev-only `camera.author` grants (`camera.photo`/`camera.releas
 actual camera roll/FOV/lens shift, and Performance controls for ink and visibility.
 World **0.5** adds optional `atmosphere.outline` and directed visibility regions.
 Older schemas remain frozen. Photo grants are not part of a normal shell grant.
+
+IPC **0.14** adds nullable `graphics.outline_quality` (`fast` or `smooth`).
+Fast keeps a one-logical-pixel stroke; smooth honours the world's 1–4 px width.
+Low/Medium inherit fast, High/Ultra smooth. This is a graphics-only revision;
+world format remains 0.5 and previous IPC schemas remain frozen.
