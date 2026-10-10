@@ -101,3 +101,8 @@ gates use `atLeast()`; see RFC-0004 "world 0.7".
 IPC **0.16** adds the `upscaler` graphics key (`"fsr1"`, `"bilinear"` or `null` to
 inherit the preset) to `graphicsConfig`/`graphicsPatch`. Every 0.15 definition is
 otherwise unchanged; earlier schemas stay frozen. See RFC-0003/0008 amendments.
+
+IPC **0.17** adds debug capture notes: the `capture.taken` notification (capture ID,
+time and input mode, sent to shells) and `capture.annotate {captureId, note}`
+(shell.control; 0-1000 code points, no control characters). Every 0.16 definition
+is unchanged. See the RFC-0008 amendment "IPC 0.17 capture notes".
