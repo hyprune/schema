@@ -113,3 +113,9 @@ accepts 20-1000 W or `null` (automatic, the new default), and the new
 where its cap comes from (`capSource`) and the chosen GPU (`device`, or `null`).
 Every 0.17 definition is otherwise unchanged. See the RFC-0009 amendment
 "IPC 0.18 device-scaled offload power and device selection".
+
+IPC **0.19** adds player settings (`player.get`/`player.set`: walk/run speed, view
+bob, reticle style/size/colour and reach limits), widens graphics `fov` to 30-120,
+adds `reticleColor`/`validColor`/`invalidColor` to the overlay style and the
+required `interaction.reticle {state, action}`. Every other 0.18 definition is
+unchanged. See the RFC-0006 amendment "IPC 0.19 player settings and reticle".
