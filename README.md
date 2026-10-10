@@ -106,3 +106,10 @@ IPC **0.17** adds debug capture notes: the `capture.taken` notification (capture
 time and input mode, sent to shells) and `capture.annotate {captureId, note}`
 (shell.control; 0-1000 code points, no control characters). Every 0.16 definition
 is unchanged. See the RFC-0008 amendment "IPC 0.17 capture notes".
+
+IPC **0.18** scales the offload power cap to the device: `offload_power_cap_w`
+accepts 20-1000 W or `null` (automatic, the new default), and the new
+`offload_device` key is `"auto"` or a lowercase PCI address. `performance` reports
+where its cap comes from (`capSource`) and the chosen GPU (`device`, or `null`).
+Every 0.17 definition is otherwise unchanged. See the RFC-0009 amendment
+"IPC 0.18 device-scaled offload power and device selection".
