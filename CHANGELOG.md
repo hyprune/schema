@@ -214,7 +214,8 @@ Object manifests use the world format numbering: a world may use objects whose
   `effects` kind/colour/durationMs, new `tracks`, `stacks`, `toggles`, `ports`).
   It may change until world format 0.10 is defined.
 - `validate('object', manifest, undefined, format?, options)`: trait
-  combinations, origin conventions (floor, wall, ceiling, character feet), slot
+  combinations, origin conventions (floor, wall and ceiling within 1 cm; a
+  character's rest-pose feet within 5 cm), slot
   ids, poses inside the bounds grown by 0.5 m, palettes, seat anchors, track
   points and arcs, stack layouts, machine input references, drive targets and
   output domains. With `options.gltf`: the format's glTF extension rules, node

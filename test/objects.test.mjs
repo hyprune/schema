@@ -92,6 +92,10 @@ test('origin conventions by support surface', () => {
   rejects('object', ceiling, /max y must be 0/);
   assert.deepEqual(errors('object', {...wall, traits: {movable: {surfaces: ['any']}}}), []);
   rejects('object', {...lantern(), bounds: {min: [0, 0, 0], max: [0, 1, 1]}}, /min x must be below max/);
+  const feet = example('object-character'); feet.bounds.min[1] = 0.03;
+  assert.deepEqual(errors('object', feet), []);
+  feet.bounds.min[1] = -0.08;
+  rejects('object', feet, /within 0.05 m of 0 \(the feet at the origin\)/);
   rejects('object', {...lantern(), traits: {movable: {scale: [1.5, 2]}}}, /min <= 1 <= max/);
 });
 
