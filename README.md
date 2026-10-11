@@ -2,7 +2,7 @@
 
 > **Hyprune** is an explorable, world-driven desktop environment for Hyprland: your workspaces become places you can walk through, with live windows on the walls. This repository holds the versioned **schemas** for world packages, IPC and manifests, and their validator. Install Hyprune through the [hyprune](https://github.com/hyprune/hyprune) repository (starter kits, Nix, Arch); learn more at [hyprune.com](https://hyprune.com). Licence: MIT.
 
-Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.8), the IPC protocol (0.1–0.19), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
+Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.8), the IPC protocol (0.1–0.20), object and library manifests (0.9, draft 0.10), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
 
 ## Install
 
@@ -156,3 +156,30 @@ stays `editor.unplaced.windows`. `spatial.map` gains optional `levels` (1-6
 per-level blueprint SVGs). `extensions/blueprint.schema.json` defines the world
 extension `com.hyprune.blueprint` 0.1 that supplies them. Every other 0.19
 definition is unchanged. See the RFC-0004 and RFC-0005 amendments for IPC 0.20.
+
+## Objects and libraries (RFC-0011)
+
+Object manifests (`object.json`) and library manifests (`library.json`) use the
+world format numbering and start at **0.9** (`v0.9/object.schema.json`,
+`v0.9/library.schema.json`); `v0.9/library-releases.schema.json` describes the
+meta repository's `libraries/releases.json`. `v0.10/` holds a **draft** that adds
+the `mover` trait, RFC-0013's `machine` trait and the extra slot kinds; it may
+change until world format 0.10 is defined.
+
+```js
+import { validate, objectFormats } from '@hyprune/schema';
+const result = validate('object', manifest, undefined, undefined, { gltf, directory: 'street-lantern' });
+// result.errors, result.warnings, result.triangles
+```
+
+```sh
+npm run validate -- object examples/object.json
+npm run validate -- object objects/bench/object.json - 0.9 objects/bench/object.glb
+npm run validate -- library examples/library.json
+npm run validate -- library-releases examples/library-releases.json
+```
+
+The validator is pure: it never reads files. Pass `gltf` (the parsed glTF or a
+GLB's JSON chunk) for the scene cross-checks, and `files`, `thumbnail` and
+`measured` (exact rest bounds, largest texture, GPU bytes) when you have them;
+`@hyprune/sdk`'s `hyprune object check <dir>` gathers all of them for a directory.
