@@ -3,8 +3,8 @@ import { readFileSync } from 'node:fs';
 import { validate } from '../lib/validate.mjs';
 const [kind, file, method, version, worldFile, ...extra] = process.argv.slice(2);
 if (!kind || !file || extra.length || (worldFile && kind !== 'scene')) {
-  console.error('Usage: npm run validate -- <world|extension|screen-type|ipc> <file.json|-> [response-method|-] [contract-version]\n' +
-                '       npm run validate -- scene <scene.gltf> - <world-format> <world.json>');
+  console.error('Usage: hyprune-validate <world|extension|screen-type|ipc> <file.json|-> [response-method|-] [contract-version]\n' +
+                '       hyprune-validate scene <scene.gltf> - <world-format> <world.json>\n(in this repository: npm run validate -- ...)');
   process.exitCode = 2;
 } else {
   try {

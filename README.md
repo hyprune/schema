@@ -1,6 +1,24 @@
 # Hyprune schemas · v0
 
-Proposed implementation contracts for a world-driven Hyprland desktop. JSON Schema dialect: **2020-12**. Initial format/protocol identifier: **`0.1`**. This is design/tooling work, not a claim of implemented runtime compatibility.
+Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.7), the IPC protocol (0.1–0.19), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
+
+## Install
+
+```sh
+npm i -D @hyprune/schema
+npx hyprune-validate world world.json - 0.7             # a world package manifest
+npx hyprune-validate scene scene.gltf - 0.7 world.json   # its glTF against the world format
+```
+
+```js
+import { validate, worldFormats } from '@hyprune/schema';
+import schema from '@hyprune/schema/v0.7/world.schema.json' with { type: 'json' };
+
+const result = validate('world', manifest, undefined, worldFormats.at(-1));
+if (!result.valid) console.error(result.errors.join('\n'));
+```
+
+Every schema file is importable at `@hyprune/schema/v0.N/<name>.schema.json` (`v0/` holds the 0.1 contracts). For a full world authoring workflow (validate, pack, scaffold) use [`@hyprune/sdk`](https://github.com/hyprune/sdk).
 
 | Schema | Contract |
 | --- | --- |
