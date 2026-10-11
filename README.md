@@ -139,3 +139,11 @@ bob, reticle style/size/colour and reach limits), widens graphics `fov` to 30-12
 adds `reticleColor`/`validColor`/`invalidColor` to the overlay style and the
 required `interaction.reticle {state, action}`. Every other 0.18 definition is
 unchanged. See the RFC-0006 amendment "IPC 0.19 player settings and reticle".
+
+IPC **0.20** adds `surface.pocket`/`surface.unpocket` (surface.control): put a
+world window into the pocket (the Placement queue) and take it out again, placed
+in front of the player or selected for the Placement tool (`placed`). Pocket state
+stays `editor.unplaced.windows`. `spatial.map` gains optional `levels` (1-6
+per-level blueprint SVGs). `extensions/blueprint.schema.json` defines the world
+extension `com.hyprune.blueprint` 0.1 that supplies them. Every other 0.19
+definition is unchanged. See the RFC-0004 and RFC-0005 amendments for IPC 0.20.
