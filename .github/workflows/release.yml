@@ -55,7 +55,18 @@ jobs:
             echo "exists=true" >> "$GITHUB_OUTPUT"
           fi
       - name: Inspect package contents
-        run: npm pack --dry-run
+        run: |
+          npm pack --dry-run
+          # Every committed schema must ship (npm 11 once skipped the v0*/ folders).
+          npm pack --dry-run --json > pack.json
+          node -e '
+            const fs = require("fs"), path = require("path");
+            const packed = new Set(JSON.parse(fs.readFileSync("pack.json"))[0].files.map(f => f.path));
+            const want = fs.readdirSync(".").filter(d => /^v0/.test(d) && fs.statSync(d).isDirectory())
+              .flatMap(d => fs.readdirSync(d).filter(f => f.endsWith(".json")).map(f => path.join(d, f)));
+            const missing = want.filter(f => !packed.has(f));
+            if (!want.length || missing.length) { console.error("missing from package:", missing.length ? missing : "no schema folders found"); process.exit(1); }
+            console.log("all " + want.length + " schema files packed");'
       - name: Publish
         if: steps.published.outputs.exists != 'true'
         env:
