@@ -1,5 +1,7 @@
 # Hyprune schemas · v0
 
+> **Hyprune** is an explorable, world-driven desktop environment for Hyprland: your workspaces become places you can walk through, with live windows on the walls. This repository holds the versioned **schemas** for world packages, IPC and manifests, and their validator. Install Hyprune through the [hyprune](https://github.com/hyprune/hyprune) repository (starter kits, Nix, Arch); learn more at [hyprune.com](https://hyprune.com). Licence: MIT.
+
 Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.7), the IPC protocol (0.1–0.19), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
 
 ## Install
