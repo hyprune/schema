@@ -2,7 +2,8 @@
 
 > **Hyprune** is an explorable, world-driven desktop environment for Hyprland: your workspaces become places you can walk through, with live windows on the walls. This repository holds the versioned **schemas** for world packages, IPC and manifests, and their validator. Install Hyprune through the [hyprune](https://github.com/hyprune/hyprune) repository (starter kits, Nix, Arch); learn more at [hyprune.com](https://hyprune.com). Licence: MIT.
 
-Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.8), the IPC protocol (0.1–0.20), object and library manifests (0.9, draft 0.10), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
+Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.8), the IPC protocol (0.1–0.21), object and library manifests (0.9, draft 0.10), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
+
 
 ## Install
 
@@ -183,3 +184,18 @@ The validator is pure: it never reads files. Pass `gltf` (the parsed glTF or a
 GLB's JSON chunk) for the scene cross-checks, and `files`, `thumbnail` and
 `measured` (exact rest bounds, largest texture, GPU bytes) when you have them;
 `@hyprune/sdk`'s `hyprune object check <dir>` gathers all of them for a directory.
+
+IPC **0.21** adds markers, personal quests and focus sessions (RFC-0012 P1). Three
+new required state keys: `markers` (the marker reveal, the persistent-marker mode
+and up to 64 resolved markers), `quests` (tracked and up to 16 active quests,
+counts) and `focus` (the focus session phase, monotonic phase times, credited
+time, cycles and target). New methods `markers.reveal` (shell.control),
+`guidance.get`/`guidance.set` (marker, quest and focus settings, the `player.get`
+pattern), `quests.list/get/track/accept/abandon/resume/create/update/delete/mark`
+and `focus.start/pause/resume/skip/stop/history`; mutations need the new
+`quest.control` grant. Events `quest.progress` and `focus.phase`. The world keymap
+gains `markers.reveal`, the overlay style a required `questColor`, and
+`spatial.projection` markers an optional `markerId`. File schemas in `v0.21/`:
+`quests-personal.schema.json` (`quests/personal.json`), `guidance.schema.json`
+(`guidance.json`) and `focus-history.schema.json` (one `focus/history.jsonl`
+line). Every other 0.20 definition is unchanged. See RFC-0012.
