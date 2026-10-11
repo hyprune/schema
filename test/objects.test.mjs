@@ -66,7 +66,12 @@ test('manifest shape: required fields, closed objects, ranges', () => {
 });
 
 test('reserved and unknown traits reject with a readable reason', () => {
-  for (const name of ['machine', 'mover', 'mount', 'interactive']) rejects('object', {...lantern(), traits: {[name]: {}}}, new RegExp(`^traits\\.${name}: .*rejected in object format 0\\.9`));
+  for (const name of ['machine', 'mover', 'mount', 'interactive']) {
+    rejects('object', {...lantern(), traits: {[name]: {}}}, new RegExp(`^traits\\.${name}: .*rejected in object format 0\\.9`));
+    assert.deepEqual(errors('object', {...lantern(), traits: {[name]: {}}}).length, 1, `${name}: one message`);
+  }
+  rejects('object', {...lantern(), formatVersion: '0.8'}, /^formatVersion: "0.8" is not an object format \(0.9, 0.10\)$/);
+  rejects('object', lantern(), /^formatVersion: "0.9" is not the requested 0.10$/, undefined, '0.10');
   rejects('object', {...lantern(), traits: {glowing: {}}}, /additional properties/);
   const machine = example('object-machine');
   rejects('object', {...machine, traits: {...machine.traits, mount: {}}}, /^traits\.mount: reserved/);
@@ -266,6 +271,7 @@ test('libraries: listed objects, object formats, files and attribution', () => {
   rejects('library', lib, /objects\/extra is not listed/, {objects: {...objects, extra: lantern()}});
   rejects('library', lib, /objects\/bench\/object.json has id street-lantern/, {objects: {...objects, bench: lantern()}});
   rejects('library', lib, /uses object format 0.10, newer than the library's 0.9/, {objects: {...objects, bench: example('object-machine')}});
+  rejects('library', lib, /bench has no known object formatVersion \(undefined\)/, {objects: {...objects, bench: {id: 'bench'}}});
   assert.deepEqual(errors('library', {...lib, formatVersion: '0.10'}, {objects: {...objects, bench: {...example('object-machine'), id: 'bench'}}}), []);
   rejects('library', lib, /missing ATTRIBUTION.md/, {files: files.filter(f => f.path !== 'ATTRIBUTION.md')});
   rejects('library', {...lib, attribution: [{path: 'LICENSE', author: 'A', license: 'CC0-1.0'}]}, /library.json is not covered/, {files});
