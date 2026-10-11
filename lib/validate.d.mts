@@ -12,6 +12,12 @@ export interface ValidationResult {
 export interface ValidateOptions {
   /** For kind `scene`: the package's parsed world.json (lightmap checks). */
   world?: unknown;
+  /**
+   * For kind `scene` from world 0.8: validate `value` as the glTF of this
+   * `world.objectAssets[].id` (extension rules, animation and collision node
+   * names, nesting) instead of the world's scene.gltf.
+   */
+  asset?: string;
 }
 
 /**

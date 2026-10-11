@@ -16,7 +16,7 @@ test('world 0.7 inherits every 0.6 document; 0.6 stays frozen',()=>{
 
 test('version helper compares numerically',()=>{
   assert.equal(atLeast('0.10','0.7'),true);assert.equal(atLeast('0.6','0.7'),false);assert.equal(atLeast('0.7','0.7'),true);
-  assert.equal(worldFormats.at(-1),'0.7');
+  assert.ok(worldFormats.includes('0.7'));
   assert.ok(sceneExtensions('0.7').includes('EXT_meshopt_compression'));assert.ok(!sceneExtensions('0.6').includes('KHR_texture_basisu'));
 });
 
@@ -45,5 +45,5 @@ test('scene rules: older formats, missing required, KTX2 lightmaps',()=>{
   assert.match(ok(unknown).errors.join(),/KHR_draco_mesh_compression is not allowed/);
   // A 0.6 scene without new extensions stays valid.
   assert.equal(validate('scene',{asset:{version:'2.0'},images:[{uri:'l.png'}],textures:[{source:0}]},undefined,'0.6',{world:{lightmaps:[{texture:0}]}}).valid,true);
-  assert.throws(()=>validate('scene',scene(),undefined,'0.8',{world}));
+  assert.throws(()=>validate('scene',scene(),undefined,'0.99',{world}));
 });

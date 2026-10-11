@@ -2,19 +2,19 @@
 
 > **Hyprune** is an explorable, world-driven desktop environment for Hyprland: your workspaces become places you can walk through, with live windows on the walls. This repository holds the versioned **schemas** for world packages, IPC and manifests, and their validator. Install Hyprune through the [hyprune](https://github.com/hyprune/hyprune) repository (starter kits, Nix, Arch); learn more at [hyprune.com](https://hyprune.com). Licence: MIT.
 
-Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.7), the IPC protocol (0.1–0.19), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
+Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.8), the IPC protocol (0.1–0.19), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
 
 ## Install
 
 ```sh
 npm i -D @hyprune/schema
-npx hyprune-validate world world.json - 0.7             # a world package manifest
-npx hyprune-validate scene scene.gltf - 0.7 world.json   # its glTF against the world format
+npx hyprune-validate world world.json - 0.8             # a world package manifest
+npx hyprune-validate scene scene.gltf - 0.8 world.json   # its glTF against the world format
 ```
 
 ```js
 import { validate, worldFormats } from '@hyprune/schema';
-import schema from '@hyprune/schema/v0.7/world.schema.json' with { type: 'json' };
+import schema from '@hyprune/schema/v0.8/world.schema.json' with { type: 'json' };
 
 const result = validate('world', manifest, undefined, worldFormats.at(-1));
 if (!result.valid) console.error(result.errors.join('\n'));
@@ -117,6 +117,15 @@ optimised scene assets: `KHR_texture_basisu` (KTX2, material textures only),
 `npm run validate -- scene scene.gltf - 0.7 world.json`) checks
 `extensionsRequired` and lightmap textures against the world format. Version
 gates use `atLeast()`; see RFC-0004 "world 0.7".
+
+World format **0.8** adds placed world objects: `objectAssets` (package glTF
+assets with optional `spin`/`orbit`/`bob` node animation, a static collision
+proxy and `probe`/`unlit` lighting) and `objects` (instances with pose, scale,
+speed, phase and an optional ambient override). Objects are render-only apart
+from the proxy. Check an asset's glTF with
+`validate('scene', gltf, undefined, '0.8', {world, asset: 'armillary'})` (CLI:
+`npm run validate -- scene objects/armillary.gltf - 0.8 world.json armillary`).
+See RFC-0004 "world 0.8 placed world objects".
 
 IPC **0.16** adds the `upscaler` graphics key (`"fsr1"`, `"bilinear"` or `null` to
 inherit the preset) to `graphicsConfig`/`graphicsPatch`. Every 0.15 definition is
