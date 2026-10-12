@@ -39,6 +39,7 @@
     "lib/",
     "v0*/**",
     "extensions/",
+    "registry/",
     "examples/",
     "CHANGELOG.md",
     "README.md",

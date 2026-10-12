@@ -72,3 +72,27 @@ export const objectLimits: Readonly<Record<string, number>>;
 export const worldLimits: Readonly<{ characters: number; charactersPerPath: number; pathPoints: number; arcChord: number }>;
 /** glTF extensions a scene may list in extensionsRequired for a world format. */
 export function sceneExtensions(version: string): string[];
+
+/** Registry document kinds (RFC-0015). `registry-entry` is one index entry (a registry entry file may add `$schema`). */
+export type RegistryKind = 'registry-index' | 'registry-entry' | 'release-record' | 'sources';
+/**
+ * Validate a registry document against `registry/v<version>/` (default: the newest) plus the
+ * semantic rules: unique ids, versions unique and newest first (SemVer), tags naming their
+ * version (`v<version>` or `<name>-v<version>`), SPDX expressions, per-type archive limits.
+ * @throws on an unknown kind or version
+ */
+export function validateRegistry(kind: RegistryKind, value: unknown, version?: string): ValidationResult;
+/** Registry format versions with published schemas (registry/v0.N), oldest first. */
+export const registryVersions: readonly string[];
+/** RFC-0015 archive limits per package type and index limits. */
+export const registryLimits: Readonly<{
+  world: Readonly<{ bytes: number; expandedBytes: number; files: number; fileBytes: number }>;
+  library: Readonly<{ bytes: number; expandedBytes: number; files: number; fileBytes: number }>;
+  index: Readonly<{ bytes: number; entries: number; versions: number; thumbnails: number; custom: number }>;
+}>;
+/** A parsed SemVer 2.0 version, or undefined when invalid. */
+export function parseSemver(text: unknown): { major: number; minor: number; patch: number; prerelease: string[]; build: string | null } | undefined;
+/** SemVer precedence (-1, 0, 1; build metadata ignored). Throws on invalid input. */
+export function compareSemver(a: string, b: string): -1 | 0 | 1;
+/** The version a tag names (`v<version>` or `<name>-v<version>`), or undefined. */
+export function tagVersion(tag: unknown): { name: string | null; version: string } | undefined;
