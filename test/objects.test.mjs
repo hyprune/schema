@@ -358,6 +358,11 @@ test('machines (0.10 draft): running average, levels slots, stack cap and rate',
   stack.slots.stacks[0].rate = 1001; rejects('object', stack, /rate must be <= 1000/);
   stack.slots.stacks[0] = {...stack.slots.stacks[0], rate: 40, cap: 101, layout: {grid: [11, 10, 1], spacing: [0.1, 0.1, 0.1], fill: 'xyz'}};
   rejects('object', stack, /cap must be <= 100/);
+  // Spacing may be negative (fill from the node towards -axis); zero only where the grid is 1.
+  stack.slots.stacks[0] = {...stack.slots.stacks[0], cap: 100, layout: {grid: [10, 10, 1], spacing: [-0.05, -0.08, 0], fill: 'xyz'}};
+  assert.deepEqual(errors('object', stack), []);
+  stack.slots.stacks[0].layout.spacing = [0.05, 0, 0]; rejects('object', stack, /slots.stacks waiting: spacing y must be non-zero for 10 cells/);
+  stack.slots.stacks[0].layout.spacing = [-10.5, 0.05, 0]; rejects('object', stack, /spacing\/0 must be >= -10/);
   // None of it is 0.9.
   const old = lantern(); old.slots = {levels: gauge().slots.levels};
   rejects('object', old, /must NOT have additional properties/);
