@@ -2,19 +2,19 @@
 
 > **Hyprune** is an explorable, world-driven desktop environment for Hyprland: your workspaces become places you can walk through, with live windows on the walls. This repository holds the versioned **schemas** for world packages, IPC and manifests, and their validator. Install Hyprune through the [hyprune](https://github.com/hyprune/hyprune) repository (starter kits, Nix, Arch); learn more at [hyprune.com](https://hyprune.com). Licence: MIT.
 
-Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.8), the IPC protocol (0.1–0.22), object and library manifests (0.9, draft 0.10), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
+Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.9), the IPC protocol (0.1–0.22), object and library manifests (0.9, draft 0.10), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
 
 ## Install
 
 ```sh
 npm i -D @hyprune/schema
-npx hyprune-validate world world.json - 0.8             # a world package manifest
-npx hyprune-validate scene scene.gltf - 0.8 world.json   # its glTF against the world format
+npx hyprune-validate world world.json - 0.9             # a world package manifest
+npx hyprune-validate scene scene.gltf - 0.9 world.json   # its glTF against the world format
 ```
 
 ```js
 import { validate, worldFormats } from '@hyprune/schema';
-import schema from '@hyprune/schema/v0.8/world.schema.json' with { type: 'json' };
+import schema from '@hyprune/schema/v0.9/world.schema.json' with { type: 'json' };
 
 const result = validate('world', manifest, undefined, worldFormats.at(-1));
 if (!result.valid) console.error(result.errors.join('\n'));
@@ -126,6 +126,17 @@ from the proxy. Check an asset's glTF with
 `validate('scene', gltf, undefined, '0.8', {world, asset: 'armillary'})` (CLI:
 `npm run validate -- scene objects/armillary.gltf - 0.8 world.json armillary`).
 See RFC-0004 "world 0.8 placed world objects".
+
+World format **0.9** adds characters, paths, seats and keep-clear volumes
+(RFC-0011 P2). An object asset is an inline package glTF (now with optional
+object.json `traits` and `slots`), a package object directory (`dir`) or a
+library object (`library` + `object`). Instances gain `path` (a `route`; it
+replaces `pose`), `reverse`, `seat`, `accent`, `interactions` (`say`,
+`waypoint`, `guide`, `panel`) and `locked`. New top-level `paths` (route,
+track or generic; stops with a clip, facing or seat), `seats` and `keepClear`.
+Pass the object.json of dir and library assets to check their traits too:
+`validate('world', manifest, undefined, '0.9', {assets: {resident: objectJson}})`.
+`examples/world-npcs.json` is a synthetic example. See RFC-0011 "World format 0.9".
 
 IPC **0.16** adds the `upscaler` graphics key (`"fsr1"`, `"bilinear"` or `null` to
 inherit the preset) to `graphicsConfig`/`graphicsPatch`. Every 0.15 definition is

@@ -36,7 +36,7 @@ function lanternGltf() {
 
 test('object formats are the v0.N directories with an object schema; world formats are unchanged', () => {
   assert.deepEqual(objectFormats, ['0.9', '0.10']);
-  assert.equal(worldFormats.at(-1), '0.8');
+  assert.equal(worldFormats.includes('0.10'), false);
   assert.throws(() => validate('object', lantern(), undefined, '0.8'), /Unknown object format/);
   assert.throws(() => validate('object', lantern(), 'objects.catalog'), /only valid for IPC/);
 });

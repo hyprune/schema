@@ -19,9 +19,17 @@ export interface ValidateOptions {
   /**
    * For kind `scene` from world 0.8: validate `value` as the glTF of this
    * `world.objectAssets[].id` (extension rules, animation and collision node
-   * names, nesting) instead of the world's scene.gltf.
+   * names, nesting; from 0.9 also an inline character's skin and clips) instead
+   * of the world's scene.gltf.
    */
   asset?: string;
+  /**
+   * For kind `world` from 0.9: the parsed object.json of `dir` and `library` object
+   * assets, keyed by `objectAssets[].id`. Their traits make the character-only
+   * fields, seat anchor references, `locked` and the character limit checkable as
+   * for inline assets; without them those checks skip the asset.
+   */
+  assets?: Record<string, { id?: string; formatVersion?: string; traits?: Record<string, unknown> }>;
   /** Kind object: the parsed scene glTF (or a GLB's JSON chunk) for node, material, variant, clip, budget and bounds checks. */
   gltf?: unknown;
   /** Kind object: the directory name, which must equal the object id. */
@@ -60,5 +68,7 @@ export const contractVersions: readonly string[];
 export const objectFormats: readonly string[];
 /** RFC-0011 directory, asset and library limits the object and library checks apply. */
 export const objectLimits: Readonly<Record<string, number>>;
+/** World 0.9 limits the world checks apply: character instances, characters per path, path points in total, minimum arc chord (m). */
+export const worldLimits: Readonly<{ characters: number; charactersPerPath: number; pathPoints: number; arcChord: number }>;
 /** glTF extensions a scene may list in extensionsRequired for a world format. */
 export function sceneExtensions(version: string): string[];

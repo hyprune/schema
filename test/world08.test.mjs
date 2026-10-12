@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {validate,worldFormats} from '../lib/validate.mjs';
+import {validate,worldFormats,atLeast} from '../lib/validate.mjs';
 const example=()=>JSON.parse(readFileSync(new URL('../examples/world.json',import.meta.url)));
 const as=(w,v)=>({...w,formatVersion:v});
 // RFC-0004 "world 0.8": the amendment's example.
@@ -30,7 +30,7 @@ test('world 0.8 inherits every 0.7 document; 0.7 and older stay frozen',()=>{
   const w=as(example(),'0.7');w.playable={volumes:[{type:'box',min:[-10,0,-10],max:[10,8,10]}],maxFlyHeight:7};w.backdrop={farCards:[0]};
   assert.equal(validate('world',w,undefined,'0.7').valid,true);
   assert.equal(validate('world',as(w,'0.8'),undefined,'0.8').valid,true);
-  for(const v of worldFormats.filter(v=>v!=='0.8'))
+  for(const v of worldFormats.filter(v=>!atLeast(v,'0.8')))
     for(const extra of [{objectAssets:assets()},{objects:objects()}])
       assert.equal(validate('world',{...as(example(),v),...extra},undefined,v).valid,false,v);
   assert.equal(validate('world',world08(),undefined,'0.7').valid,false);

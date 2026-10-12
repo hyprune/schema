@@ -298,3 +298,51 @@ Object manifests use the world format numbering: a world may use objects whose
 ## @hyprune/schema 0.7.0 (2026-10-12)
 
 Publishes IPC 0.21 (markers, personal quests, focus sessions) and IPC 0.22 (object catalog, user placements, libraries), plus the object manifest (`object.json` 0.9 and the 0.10 draft), library and library release-record schemas.
+
+## World 0.9: characters, paths, seats and keepClear (RFC-0011 P2)
+
+- `objectAssets[]` (at most 32, ids unique) take exactly one source: inline
+  `{id, scene, animations?, collision?, lighting?, traits?, slots?}` (the 0.8
+  asset plus object.json 0.9 `traits` and `slots`; `decorative`, `collidable`,
+  `movable`, `character` and `seat` are allowed, `mover`, `mount`, `machine` and
+  `interactive` rejected), `dir {id, dir}` (a package directory holding
+  `object.json`, object format at most the world's) or `library {id, library,
+  object}` (`library` is `<reverse-domain id>@<semver>`, `object` a slug).
+  `animations` is shorthand for `traits.decorative.animations` and `collision`
+  for `traits.collidable`; giving both forms of one is invalid.
+- `objects[]` gain `path` (a `route` path; replaces `pose`), `reverse` (only
+  with `path`), `seat` (a `seats[]` id, `<objectId>/<anchorId>` or
+  `<objectId>`; characters without a path), `accent` (linear RGB 0..1),
+  `interactions` (1..8, replacing the asset's list) and `locked` (movable
+  assets). `pose` is required unless `path` is set and forbidden with it. A
+  character's `scale` must be 1; at most 16 character instances and 8 per path.
+- Instance interactions `{id, label (1..32), prompt? (1..64), action}` with
+  `say {lines[1..8]}`, `waypoint {target: {zoneId}|{position}|{anchor}|{object}}`,
+  `guide {path}` (a route) or `panel {panel}`. `travel` and `quest` are
+  reserved and rejected. Asset-level interactions stay `say`/`panel`.
+- `paths[]` (at most 64, 1,024 points in total): `{id, name?, use?
+  (route|track|generic, default generic), closed?, points[2..256] {position,
+  type: line|curve|arc}, speed? (0.1..30), stops?[<=32]}`. A stop is `{point,
+  seconds? (0.5..600), clip? (look_around|wave|nod|idle_fidget), face?
+  ({position}|{anchor}|{object}), seat?}` with at most one of clip, face and
+  seat, one stop per point and the point below the point count. Track stops
+  take only `point` and `seconds`; generic paths have no stops. An `arc` needs
+  a horizontal chord of at least 0.1 m.
+- `seats[]` (at most 64): `{id, pose, height (0.2..1), use? (["sit"]),
+  approach? (0.3..2)}`. `keepClear[]` (at most 64): `{id, min, max}`, min
+  below max on every axis.
+- `validate('world', manifest, undefined, '0.9', {assets})` adds unique ids,
+  asset, path, seat, waypoint and face references, route-only bindings,
+  character-only and movable-only fields, pose/path exclusivity, normalised
+  seat poses, arc chords, the point total, keepClear ordering and the
+  character limits. `assets` maps a dir or library asset id to its parsed
+  `object.json`, so its traits are checked like an inline asset's; without it
+  those checks skip the asset. Reserved traits and actions are reported with a
+  plain reason. `worldLimits` exports the limits.
+- `validate('scene', gltf, undefined, '0.9', {world, asset})` reads an inline
+  asset's animations and proxy from either form and checks an inline
+  character's skin and clips; dir and library assets are checked as objects.
+- `v0.9/common.schema.json` is the 0.8 common definitions under the 0.9 `$id`
+  (the directory's IPC, input, object and library schemas are untouched).
+  `examples/world-npcs.json` is a synthetic 0.9 manifest. Everything else is
+  inherited from 0.8 unchanged. Inheritance test included.
