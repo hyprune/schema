@@ -32,6 +32,29 @@ Every schema file is importable at `@hyprune/schema/v0.N/<name>.schema.json` (`v
 
 [RFC source](https://github.com/hyprune/docs/tree/main/src/content/docs/rfcs) is normative for semantics. [RFC-0003](https://hyprune.com/rfcs/0003-ipc/) defines IPC; [RFC-0004](https://hyprune.com/rfcs/0004-world-format/) defines worlds. The `$id` URLs are mirrored by docs for authoring; this validator registers all schemas locally and never fetches them.
 
+## Registry documents (RFC-0015)
+
+Registry formats are versioned on their own, under `registry/v0.N/` (first: `0.1`):
+
+| Schema | Describes |
+| --- | --- |
+| `registry/v0.1/index.schema.json` | An index (official, community registry or any third-party index). `$defs.entry` is one entry and the shape of a registry entry file, which may add a `$schema` pointer. |
+| `registry/v0.1/release-record.schema.json` | `<id>-<version>.release.json`, the record published with each release. |
+| `registry/v0.1/sources.schema.json` | `sources.json` and the read-only files listed in `HYPRUNE_SOURCES_FILES`. |
+
+```js
+import { validateRegistry, compareSemver, tagVersion } from '@hyprune/schema';
+validateRegistry('registry-index', index);   // also 'registry-entry', 'release-record', 'sources'
+tagVersion('lumen-reach-v0.10.2');           // { name: 'lumen-reach', version: '0.10.2' }
+```
+
+`validateRegistry` adds the rules a schema can't express: ids unique within an index,
+versions unique and newest first by SemVer, each tag naming its version (`v<version>` or
+`<name>-v<version>`), SPDX licences, per-type archive limits (`registryLimits`), release
+record asset names, and unique, non-reserved custom source ids. CLI:
+`npm run validate -- registry-index index.json` (indexes up to 16 MiB). Fixtures:
+`examples/registry/` (valid) and `examples/registry/invalid/<kind>--<case>.json`.
+
 ## Validate
 
 Use Node >=22.12 (CI pins 24.14.0), npm, and the committed lockfile:

@@ -463,3 +463,15 @@ Publishes IPC 0.24: `objects.catalog` entries carry a placed machine's declared 
 ## @hyprune/schema 0.10.0 (2026-10-13)
 
 Publishes IPC 0.25: companions. `companion.set`, `companion.clear` and `companion.mode` (follow or stay), a required `companion` state key, a companion capability on catalog entries and the aimed interaction type `companion`; and the object 0.10 draft `companion` block (name, followDistance, idles, say). Inherits 0.24.
+
+## Unreleased: registry documents
+
+Registry documents (RFC-0015), versioned independently under `registry/v0.1/`:
+`index.schema.json` (index documents; `$defs.entry` for registry entry files),
+`release-record.schema.json` and `sources.schema.json`. `validateRegistry(kind, doc,
+version?)` for kinds `registry-index`, `registry-entry`, `release-record` and `sources`
+checks unique ids, versions unique and newest first (SemVer, no build metadata), tags
+naming their version (`v<version>` or `<name>-v<version>`), SPDX licences, per-type
+archive limits and custom source rules. New exports: `registryVersions`,
+`registryLimits`, `parseSemver`, `compareSemver`, `tagVersion`. The CLI accepts the four
+registry kinds. The package ships `registry/`. World formats and IPC are unchanged.
