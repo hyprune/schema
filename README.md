@@ -2,7 +2,7 @@
 
 > **Hyprune** is an explorable, world-driven desktop environment for Hyprland: your workspaces become places you can walk through, with live windows on the walls. This repository holds the versioned **schemas** for world packages, IPC and manifests, and their validator. Install Hyprune through the [hyprune](https://github.com/hyprune/hyprune) repository (starter kits, Nix, Arch); learn more at [hyprune.com](https://hyprune.com). Licence: MIT.
 
-Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.9), the IPC protocol (0.1–0.22), object and library manifests (0.9, draft 0.10), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
+Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.9), the IPC protocol (0.1–0.23), object and library manifests (0.9, draft 0.10), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
 
 ## Install
 
@@ -192,6 +192,16 @@ and user instances, object pocket items, user-object usage and limits),
 new `editor.gizmo` carries the tool 4 axis space, pivot and snapping. Error
 `data` may name the refusing placement `rule`. Every other 0.21 definition is
 unchanged. See the RFC-0011 amendment "P1 in IPC 0.22".
+
+IPC **0.23** adds characters, paths and interactions (RFC-0011 P2): a required
+`npcs` state key (motion setting and effective state, character budgets, the
+path being drawn, the aimed character and the running interaction),
+`character` and `accent` on object instances with path, activity and seat
+values, `use`/`name`/`speed`/`stops` on editor paths, the reticle action
+`interact` and the graphics key `npc_motion`. New methods
+`npcs.spawn/bind/disable/remove` and `paths.set/remove/draw/finish`
+(objects.control), `paths.list` (state.read) and `interaction.choose`
+(world.control). Every other 0.22 definition is unchanged.
 
 ## Objects and libraries (RFC-0011)
 

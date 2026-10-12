@@ -346,3 +346,43 @@ Publishes IPC 0.21 (markers, personal quests, focus sessions) and IPC 0.22 (obje
   (the directory's IPC, input, object and library schemas are untouched).
   `examples/world-npcs.json` is a synthetic 0.9 manifest. Everything else is
   inherited from 0.8 unchanged. Inheritance test included.
+
+## IPC 0.23: characters, paths and interactions (RFC-0011 P2)
+
+- Required state key `npcs {motion (auto|always|still|off), state
+  (none|animating|paused|still|off), reason (null or up to 64 characters, e.g.
+  battery), usage {authored, user}, limits {authored (<=16), user (<=8)},
+  drawing, aimed, interaction}`. `drawing` is null or `{pathId, use, spawn:
+  null|{ref}, bind: null|objectId}` (a `paths.draw` in progress); `aimed` is null
+  or `{objectId, name, prompt, interactions[<=8] {id, label, type}}`;
+  `interaction` is null or `{objectId, interactionId|null, type
+  (choose|say|waypoint|guide|panel), label, choices[<=8] {id, label},
+  line|null, lineIndex, lineCount, panel|null}`.
+- `objects.instances[]` gain required `character` (boolean) and `accent`
+  (null or linear RGB); `path` is null or a qualified path ref
+  (`package/<id>`, `user/<id>`), `activity` null or
+  `idle|walking|running|stopped|sitting|guiding|interacting|suspended`, `seat`
+  null or a seat ref (up to 192 characters).
+- `editor.paths[]` gain required `use` (route|track|generic), `name`
+  (string|null), `speed` (number|null) and `stops` (at most 32, the world 0.9
+  stop shape).
+- `interaction.reticle.action` gains `interact`. `graphicsConfig` and
+  `graphicsPatch` gain `npc_motion` (`auto`, `always`, `still`, `off`).
+- Methods: `npcs.spawn {ref, path?, pose?, phase?, speed? (0.25..2), accent?,
+  reverse?}` (`{revision, id}`; path and pose exclusive, reverse needs a path);
+  `npcs.bind {id, path?, pose?, phase?, speed?, accent?, reverse?}` (at least one
+  setting); `npcs.disable {id, disabled}`; `npcs.remove {id}|{all:true}`;
+  `paths.list {}` (`{paths[<=192]}`: `{ref, source (package|user), id, name,
+  use, closed, points, speed, stops, walkable (null for non-routes),
+  problems[<=8], bound[<=8]}`); `paths.set {path: {id?, name?, use, closed,
+  points[2..256], speed?, stops?}}` (`{revision, id}`); `paths.remove {id,
+  unbind?}`; `paths.draw {use?, name?, spawn? {ref, phase?, speed?, accent?},
+  bind?}` (`{revision, id}`; spawn and bind exclusive); `paths.finish {}`
+  (`{revision, id|null, bound|null}`); `interaction.choose {objectId,
+  interactionId|null}`. Path params take a qualified ref or a bare id
+  (`package/<id>`); `paths.set/remove/draw/finish` ids are user path ids.
+  Grants: `npcs.*` and `paths.set/remove/draw/finish` need `objects.control`,
+  `paths.list` needs `state.read`, `interaction.choose` needs `world.control`.
+- Everything else is inherited from 0.22 unchanged (no new grant or event);
+  `session.hello` reports `0.23` and lists the ten methods. Inheritance test
+  included.
