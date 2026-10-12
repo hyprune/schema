@@ -2,7 +2,7 @@
 
 > **Hyprune** is an explorable, world-driven desktop environment for Hyprland: your workspaces become places you can walk through, with live windows on the walls. This repository holds the versioned **schemas** for world packages, IPC and manifests, and their validator. Install Hyprune through the [hyprune](https://github.com/hyprune/hyprune) repository (starter kits, Nix, Arch); learn more at [hyprune.com](https://hyprune.com). Licence: MIT.
 
-Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.9), the IPC protocol (0.1–0.23), object and library manifests (0.9, draft 0.10), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
+Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.9), the IPC protocol (0.1–0.24), object and library manifests (0.9, draft 0.10), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
 
 ## Install
 
@@ -202,6 +202,15 @@ values, `use`/`name`/`speed`/`stops` on editor paths, the reticle action
 `npcs.spawn/bind/disable/remove` and `paths.set/remove/draw/finish`
 (objects.control), `paths.list` (state.read) and `interaction.choose`
 (world.control). Every other 0.22 definition is unchanged.
+
+IPC **0.24** adds live machine state (RFC-0013): `objects.catalog` entries gain
+a required `machine` (null, or the machine trait's `primary` and its input
+declarations as authored, repeat not expanded) and a required `live` state key
+lists at most 64 bound machine instances with each input's binding, mapped and
+raw value, condition (`fresh`, `stale`, `missing`, `error`) and `publishedAt`
+(wall-clock Unix ms of the held publication, or null). No new method, event or
+grant; every other 0.23 definition is unchanged. See the RFC-0013 amendment
+"Live state in IPC 0.24".
 
 ## Objects and libraries (RFC-0011)
 
