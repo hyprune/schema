@@ -2,7 +2,7 @@
 
 > **Hyprune** is an explorable, world-driven desktop environment for Hyprland: your workspaces become places you can walk through, with live windows on the walls. This repository holds the versioned **schemas** for world packages, IPC and manifests, and their validator. Install Hyprune through the [hyprune](https://github.com/hyprune/hyprune) repository (starter kits, Nix, Arch); learn more at [hyprune.com](https://hyprune.com). Licence: MIT.
 
-Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.8), the IPC protocol (0.1–0.21), object and library manifests (0.9, draft 0.10), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
+Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.8), the IPC protocol (0.1–0.22), object and library manifests (0.9, draft 0.10), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
 
 ## Install
 
@@ -171,6 +171,16 @@ gains `markers.reveal`, the overlay style a required `questColor`, and
 `quests-personal.schema.json` (`quests/personal.json`), `guidance.schema.json`
 (`guidance.json`) and `focus-history.schema.json` (one `focus/history.jsonl`
 line). Every other 0.20 definition is unchanged. See RFC-0012.
+
+IPC **0.22** adds the object catalog and user placements (RFC-0011 P1): the
+`objects.control` grant, a required `objects` state key (this world's authored
+and user instances, object pocket items, user-object usage and limits),
+`objects.catalog/pocket/place/transform/remove/hide/reset/configure` and
+`libraries.list/install/remove`. `editor.selectedKind` gains `node`,
+`editor.submode` gains `universal`, `editor.unplaced` gains `objects` and the
+new `editor.gizmo` carries the tool 4 axis space, pivot and snapping. Error
+`data` may name the refusing placement `rule`. Every other 0.21 definition is
+unchanged. See the RFC-0011 amendment "P1 in IPC 0.22".
 
 ## Objects and libraries (RFC-0011)
 
