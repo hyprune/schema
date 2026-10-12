@@ -249,8 +249,8 @@ test('machines (0.10 draft): inputs, drives, domains, recipes', () => {
   rejects('object', recipe, /maps to "green", not a value of the input/);
   const position = machine(); position.traits.machine.positions = [{node: 'belt', range: [0, 0.5]}];
   rejects('object', position, /position "belt" is not a decorative animation/);
-  const stack = machine(); stack.slots.stacks[0].cap = 65;
-  rejects('object', stack, /must be <= 64/);
+  const stack = machine(); stack.slots.stacks[0].cap = 101;
+  rejects('object', stack, /must be <= 100/);
   stack.slots.stacks[0] = {...stack.slots.stacks[0], cap: 20, layout: {grid: [2, 2, 2], spacing: [0.3, 0.3, 0.3], fill: 'xzy'}};
   rejects('object', stack, /cap exceeds the layout grid/);
   const spawn = machine(); spawn.slots.spawns[0].track = 'lane';
@@ -261,6 +261,106 @@ test('machines (0.10 draft): inputs, drives, domains, recipes', () => {
   rejects('object', arc, /horizontal chord/);
   const toggle = machine(); toggle.slots.toggles = [{id: 'proxy-flag', nodes: ['proxy']}];
   rejects('object', toggle, /collision proxy can't be toggled/, {gltf: {asset: {version: '2.0'}, scenes: [{nodes: [0]}], nodes: [{name: 'proxy', mesh: 0}], meshes: [{primitives: [{attributes: {POSITION: 0}}]}], accessors: [{count: 3, min: [0, 0, 0], max: [1, 1, 1]}]}});
+});
+
+test('machines (0.10 draft): running average, levels slots, stack cap and rate', () => {
+  // The conveyor plus a gauge's value/average inputs and two levels slots.
+  const gauge = () => {
+    const d = example('object-machine');
+    d.traits.machine.inputs.push(
+      {id: 'value', type: 'number', min: 0, max: 100, default: 0, label: 'Value', explain: 'The reading.'},
+      {id: 'average', type: 'number', min: 0, max: 100, label: 'Average', explain: 'An average the source computed.'});
+    d.slots.levels = [
+      {id: 'liquid', node: 'liquid', mode: 'fill', axis: [0, 1, 0], length: 1, surface: 'liquid-surface', settle: 'spring'},
+      {id: 'average-ring', node: 'average-ring', mode: 'slide', length: 1}];
+    d.traits.machine.drives.push(
+      {input: 'value', target: 'level:liquid', map: {scale: {from: [0, 100], to: [0, 1]}}},
+      {input: 'value', target: 'level:average-ring', map: {average: {windowS: 60, override: 'average'}, scale: {from: [0, 100], to: [0, 1]}}});
+    return d;
+  };
+  const drive = d => d.traits.machine.drives.at(-1);
+  assert.deepEqual(errors('object', gauge()), []);
+  // average composes with the value forms, never with becomes or counter.
+  for (const form of [{scale: {from: [0, 64], to: [0, 2]}}, {thresholds: [{below: 50, to: 'idle'}], else: 'fail'}, {format: {decimals: 0}}]) {
+    const d = gauge(), target = form.thresholds ? 'state:lamp' : form.format ? 'label:sign' : 'animation:belt-rollers';
+    d.traits.machine.drives.push({input: 'queued', target, map: {average: {windowS: 30}, ...form}});
+    assert.deepEqual(errors('object', d), [], JSON.stringify(form));
+  }
+  for (const map of [{average: {}, becomes: 'ok'}, {average: {}, counter: true}]) {
+    const d = gauge(); drive(d).map = map;
+    rejects('object', d, /must NOT be valid/);
+  }
+  const windows = gauge();
+  drive(windows).map.average.windowS = 0.5; rejects('object', windows, /average\/windowS must be >= 1/);
+  drive(windows).map.average.windowS = 3601; rejects('object', windows, /average\/windowS must be <= 3600/);
+  drive(windows).map.average = {window: 60}; rejects('object', windows, /must NOT have additional properties/);
+  drive(windows).map.average = {override: 'Average'}; rejects('object', windows, /must match pattern/);
+  // The override names another value input of the machine; average needs a numeric input.
+  const override = gauge();
+  drive(override).map.average.override = 'nope'; rejects('object', override, /average override: unknown input nope/);
+  drive(override).map.average.override = 'value'; rejects('object', override, /average override must name another input/);
+  drive(override).map.average.override = 'jobStarted'; rejects('object', override, /average override jobStarted must be a value input, not event/);
+  const textInput = gauge(); drive(textInput).input = 'lastJob';
+  rejects('object', textInput, /average needs an int or number input/);
+  // A direct average of an int is fractional, and an override widens the range.
+  const intAverage = gauge(); intAverage.traits.machine.drives.push({input: 'queued', target: 'count:waiting', map: {average: {}}});
+  rejects('object', intAverage, /counts need an int input or a rounded scale/);
+  intAverage.traits.machine.drives.at(-1).map = {average: {}, scale: {from: [0, 64], to: [0, 64]}, round: 'nearest'};
+  assert.deepEqual(errors('object', intAverage), []);
+  const wide = gauge(); wide.traits.machine.drives.push({input: 'queued', target: 'animation:belt-rollers', map: {average: {override: 'value'}}});
+  rejects('object', wide, /range 0-100 exceeds 0-10/);
+  // Recipes (bindings) may average numeric inputs; override is for drives only.
+  const recipe = gauge(); recipe.traits.machine.recipes[0].maps = {queued: {average: {windowS: 120}}};
+  assert.deepEqual(errors('object', recipe), []);
+  recipe.traits.machine.recipes[0].maps = {queued: {average: {override: 'value'}}};
+  rejects('object', recipe, /queued average override is for drives only/);
+  recipe.traits.machine.recipes[0].maps = {lastJob: {average: {}}};
+  rejects('object', recipe, /lastJob average needs an int or number input/);
+  // level: targets resolve to a levels slot and take 0-1.
+  const level = gauge(); drive(level).target = 'level:ring';
+  rejects('object', level, /unknown level target "ring"/);
+  const levelRange = gauge(); drive(levelRange).map = {average: {}};
+  rejects('object', levelRange, /range 0-100 exceeds 0-1/);
+  // Levels slot fields.
+  const slot = (patch, pattern) => { const d = gauge(); Object.assign(d.slots.levels[0], patch); rejects('object', d, pattern); };
+  slot({mode: 'pour'}, /must be equal to one of the allowed values/);
+  slot({length: 0}, /must be > 0/);
+  slot({length: 10.5}, /must be <= 10/);
+  slot({axis: [0, 2, 0]}, /must be <= 1/);
+  slot({axis: [0, 0.5, 0]}, /slots.levels liquid: axis must be a unit vector/);
+  slot({settle: 'bounce'}, /must be equal to one of the allowed values/);
+  slot({mode: 'slide'}, /must NOT be valid/);
+  const noLength = gauge(); delete noLength.slots.levels[1].length;
+  rejects('object', noLength, /must have required property 'length'/);
+  const nine = gauge(); nine.slots.levels = Array.from({length: 9}, (_, i) => ({id: `l${i}`, node: `n${i}`, mode: 'slide', length: 1}));
+  rejects('object', nine, /must NOT have more than 8 items/);
+  const twice = gauge(); twice.slots.levels[1].id = 'liquid';
+  rejects('object', twice, /slots.levels: duplicate id/);
+  // With the glTF: nodes exist, the surface sits outside the fill, nothing moves the proxy.
+  const gltf = (nodes, scene = [0, 1, 2]) => ({asset: {version: '2.0'}, scenes: [{nodes: scene}], nodes, meshes: [{primitives: [{attributes: {POSITION: 0}}]}],
+    accessors: [{componentType: 5126, type: 'VEC3', count: 3, min: [0, 0, 0], max: [0.1, 0.1, 0.1]}]});
+  const parts = () => [{name: 'liquid', mesh: 0}, {name: 'liquid-surface', mesh: 0}, {name: 'average-ring', mesh: 0}, {name: 'proxy', mesh: 0}];
+  const levelErrors = (d, nodes, scene) => errors('object', d, {gltf: gltf(nodes, scene)}).filter(e => /slots\.levels/.test(e));
+  assert.deepEqual(levelErrors(gauge(), parts()), []);
+  assert.match(levelErrors(gauge(), parts().filter(n => n.name !== 'liquid-surface'), [0, 1]).join('\n'), /slots.levels liquid: node "liquid-surface" not found in the glTF/);
+  assert.match(levelErrors(gauge(), parts().filter(n => n.name !== 'average-ring'), [0, 1]).join('\n'), /slots.levels average-ring: node "average-ring" not found in the glTF/);
+  const nested = parts(); nested[0].children = [1];
+  assert.match(levelErrors(gauge(), nested, [0, 2]).join('\n'), /surface "liquid-surface" must not be inside the fill node's subtree/);
+  const proxy = gauge(); proxy.slots.levels[1].node = 'proxy';
+  assert.match(levelErrors(proxy, parts()).join('\n'), /slots.levels average-ring: the collision proxy can't be moved/);
+  const shared = gauge(); shared.slots.levels[1].node = 'liquid';
+  assert.match(levelErrors(shared, parts()).join('\n'), /node "liquid" is also moved by levels slot liquid/);
+  // Stacks: cap up to 100 and an optional rate 0-1000 copies per second.
+  const stack = gauge(); stack.slots.stacks[0] = {...stack.slots.stacks[0], cap: 100, rate: 40, layout: {grid: [5, 4, 5], spacing: [0.1, 0.1, 0.1], fill: 'xzy'}};
+  assert.deepEqual(errors('object', stack), []);
+  stack.slots.stacks[0].rate = 0; assert.deepEqual(errors('object', stack), []);
+  stack.slots.stacks[0].rate = -1; rejects('object', stack, /rate must be >= 0/);
+  stack.slots.stacks[0].rate = 1001; rejects('object', stack, /rate must be <= 1000/);
+  stack.slots.stacks[0] = {...stack.slots.stacks[0], rate: 40, cap: 101, layout: {grid: [11, 10, 1], spacing: [0.1, 0.1, 0.1], fill: 'xyz'}};
+  rejects('object', stack, /cap must be <= 100/);
+  // None of it is 0.9.
+  const old = lantern(); old.slots = {levels: gauge().slots.levels};
+  rejects('object', old, /must NOT have additional properties/);
 });
 
 test('libraries: listed objects, object formats, files and attribution', () => {
