@@ -430,3 +430,7 @@ Draft only; no version changes. `v0.10/object.schema.json` and the validator:
   Unix ms of the publication core holds, null when missing.
 - Everything else is inherited from 0.23 unchanged (no new method, grant or
   event); `session.hello` reports `0.24`. Inheritance test included.
+
+## @hyprune/schema 0.9.0 (2026-10-13)
+
+Publishes IPC 0.24: `objects.catalog` entries carry a placed machine's declared inputs (`machine`), and a new `live` state key reports each placed machine's source, status and per-input values (published only on change). Inherited from 0.23 otherwise; no new grant. Also the object 0.10 draft additions for gauges: the `average` mapping modifier, `levels` slots (fill/slide with spring) and stack rate, cap 100 and signed spacing.
