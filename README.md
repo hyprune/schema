@@ -2,7 +2,7 @@
 
 > **Hyprune** is an explorable, world-driven desktop environment for Hyprland: your workspaces become places you can walk through, with live windows on the walls. This repository holds the versioned **schemas** for world packages, IPC and manifests, and their validator. Install Hyprune through the [hyprune](https://github.com/hyprune/hyprune) repository (starter kits, Nix, Arch); learn more at [hyprune.com](https://hyprune.com). Licence: MIT.
 
-Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.9), the IPC protocol (0.1–0.24), object and library manifests (0.9, draft 0.10), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
+Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.9), the IPC protocol (0.1–0.25, 0.25 draft), object and library manifests (0.9, draft 0.10), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
 
 ## Install
 
@@ -211,6 +211,13 @@ raw value, condition (`fresh`, `stale`, `missing`, `error`) and `publishedAt`
 (wall-clock Unix ms of the held publication, or null). No new method, event or
 grant; every other 0.23 definition is unchanged. See the RFC-0013 amendment
 "Live state in IPC 0.24".
+
+IPC **0.25** (draft, the RFC-0010 companions amendment) adds the companion: a
+required `companion` state key (the chosen ref and name, its state, mode
+`follow`/`stay`/`route`, bound path, activity and position), a `companion`
+capability on catalog entries, the aimed interaction type `companion`, and
+`companion.set/clear/mode` (objects.control). Object format 0.10 (draft) gains
+the optional `companion` block. Every other 0.24 definition is unchanged.
 
 ## Objects and libraries (RFC-0011)
 
