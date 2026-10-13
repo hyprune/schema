@@ -464,7 +464,7 @@ Publishes IPC 0.24: `objects.catalog` entries carry a placed machine's declared 
 
 Publishes IPC 0.25: companions. `companion.set`, `companion.clear` and `companion.mode` (follow or stay), a required `companion` state key, a companion capability on catalog entries and the aimed interaction type `companion`; and the object 0.10 draft `companion` block (name, followDistance, idles, say). Inherits 0.24.
 
-## Unreleased: registry documents
+## @hyprune/schema 0.11.0 (2026-10-13): registry documents
 
 Registry documents (RFC-0015), versioned independently under `registry/v0.1/`:
 `index.schema.json` (index documents; `$defs.entry` for registry entry files),
