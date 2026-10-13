@@ -2,7 +2,7 @@
 
 > **Hyprune** is an explorable, world-driven desktop environment for Hyprland: your workspaces become places you can walk through, with live windows on the walls. This repository holds the versioned **schemas** for world packages, IPC and manifests, and their validator. Install Hyprune through the [hyprune](https://github.com/hyprune/hyprune) repository (starter kits, Nix, Arch); learn more at [hyprune.com](https://hyprune.com). Licence: MIT.
 
-Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.9), the IPC protocol (0.1–0.25, 0.25 draft), object and library manifests (0.9, draft 0.10), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
+Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.9), the IPC protocol (0.1–0.26), object and library manifests (0.9, draft 0.10), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
 
 ## Install
 
@@ -241,6 +241,16 @@ required `companion` state key (the chosen ref and name, its state, mode
 capability on catalog entries, the aimed interaction type `companion`, and
 `companion.set/clear/mode` (objects.control). Object format 0.10 (draft) gains
 the optional `companion` block. Every other 0.24 definition is unchanged.
+
+IPC **0.26** names tool 9, the debug tool: `tool` is 1–5 or 9 in `interaction`,
+`editor`, `hud.pose` and `tool.changed` (name `debug`), `editor.submode` takes
+the debug layer ids, a required `editor.debugTool` (null, or the shown layer,
+its index and count, its legend and the open info card), the world action
+`tool9`, and `editor.toolDefinitions` gains the slot-9 entry. The companion
+state gains a required `pace` (`walk`/`run`) and `companion.mode` an optional
+`pace`. The pocket list (`editor.unplaced.windows`) and `mounts.instances` list
+up to 128 entries (the apps limit); the object pocket stays at 16. No new
+method, event or grant; every other 0.25 definition is unchanged.
 
 ## Objects and libraries (RFC-0011)
 
