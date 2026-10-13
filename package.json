@@ -1,6 +1,6 @@
 {
   "name": "@hyprune/schema",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "Versioned JSON Schemas for Hyprune world packages and the IPC protocol, with a validator and CLI for world authors",
   "license": "MIT",
   "type": "module",
