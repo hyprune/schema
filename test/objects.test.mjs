@@ -35,7 +35,7 @@ function lanternGltf() {
 }
 
 test('object formats are the v0.N directories with an object schema; world formats are unchanged', () => {
-  assert.deepEqual(objectFormats, ['0.9', '0.10']);
+  assert.deepEqual(objectFormats, ['0.9', '0.10', '0.11']);
   assert.equal(worldFormats.includes('0.10'), false);
   assert.throws(() => validate('object', lantern(), undefined, '0.8'), /Unknown object format/);
   assert.throws(() => validate('object', lantern(), 'objects.catalog'), /only valid for IPC/);
@@ -70,11 +70,12 @@ test('reserved and unknown traits reject with a readable reason', () => {
     rejects('object', {...lantern(), traits: {[name]: {}}}, new RegExp(`^traits\\.${name}: .*rejected in object format 0\\.9`));
     assert.deepEqual(errors('object', {...lantern(), traits: {[name]: {}}}).length, 1, `${name}: one message`);
   }
-  rejects('object', {...lantern(), formatVersion: '0.8'}, /^formatVersion: "0.8" is not an object format \(0.9, 0.10\)$/);
+  rejects('object', {...lantern(), formatVersion: '0.8'}, /^formatVersion: "0.8" is not an object format \(0.9, 0.10, 0.11\)$/);
   rejects('object', lantern(), /^formatVersion: "0.9" is not the requested 0.10$/, undefined, '0.10');
+  rejects('object', {...lantern(), formatVersion: '0.10', traits: {mount: {}}}, /^traits\.mount: needs object format 0\.11/);
   rejects('object', {...lantern(), traits: {glowing: {}}}, /additional properties/);
   const machine = example('object-machine');
-  rejects('object', {...machine, traits: {...machine.traits, mount: {}}}, /^traits\.mount: reserved/);
+  rejects('object', {...machine, traits: {...machine.traits, mount: {}}}, /^traits\.mount: needs object format 0\.11/);
 });
 
 test('trait combinations follow RFC-0011', () => {

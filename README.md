@@ -2,7 +2,7 @@
 
 > **Hyprune** is an explorable, world-driven desktop environment for Hyprland: your workspaces become places you can walk through, with live windows on the walls. This repository holds the versioned **schemas** for world packages, IPC and manifests, and their validator. Install Hyprune through the [hyprune](https://github.com/hyprune/hyprune) repository (starter kits, Nix, Arch); learn more at [hyprune.com](https://hyprune.com). Licence: MIT.
 
-Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.9), the IPC protocol (0.1–0.26), object and library manifests (0.9, draft 0.10), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
+Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.9), the IPC protocol (0.1–0.27, 0.27 draft), object and library manifests (0.9, drafts 0.10 and 0.11), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
 
 ## Install
 
@@ -252,6 +252,13 @@ state gains a required `pace` (`walk`/`run`) and `companion.mode` an optional
 up to 128 entries (the apps limit); the object pocket stays at 16. No new
 method, event or grant; every other 0.25 definition is unchanged.
 
+IPC **0.27** (draft) adds workspace screens: catalog entries and object instances
+carry a required, nullable `screen` (an entry's anchor aspect `16:9`/`21:9`, size and
+mount type; an instance's bound `workspace`, its `home` area id in `mounts`, aspect and
+scaled size). `objects.configure` patches and `objects.place` take `workspace`: a
+number 1–9999, `"next-free"` or null. No new method, event or grant; every other 0.26
+definition is unchanged.
+
 ## Objects and libraries (RFC-0011)
 
 Object manifests (`object.json`) and library manifests (`library.json`) use the
@@ -259,7 +266,11 @@ world format numbering and start at **0.9** (`v0.9/object.schema.json`,
 `v0.9/library.schema.json`); `v0.9/library-releases.schema.json` describes the
 meta repository's `libraries/releases.json`. `v0.10/` holds a **draft** that adds
 the `mover` trait, RFC-0013's `machine` trait and the extra slot kinds; it may
-change until world format 0.10 is defined.
+change until world format 0.10 is defined. `v0.11/` is a second **draft** that switches on
+the `mount` trait for workspace screens (RFC-0011 amendment): 1–4 anchors, at most one
+`mounted-workspace` anchor, 16:9 (within 0.5 %) or 21:9 (aspect 2.33–2.39), at least
+0.9 m high, its rectangle inside the bounds grown by 0.1 m; `tool-mount` anchors are
+inert. `screenAspect(size)` and `screenLimits` are exported.
 
 ```js
 import { validate, objectFormats } from '@hyprune/schema';

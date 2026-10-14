@@ -68,6 +68,10 @@ export const contractVersions: readonly string[];
 export const objectFormats: readonly string[];
 /** RFC-0011 directory, asset and library limits the object and library checks apply. */
 export const objectLimits: Readonly<Record<string, number>>;
+/** A workspace screen anchor's aspect (object format 0.11): '16:9' within 0.5 %, '21:9' from 2.33 to 2.39, else null. */
+export function screenAspect(size: readonly [number, number] | readonly number[]): '16:9' | '21:9' | null;
+/** Workspace screen limits: the anchor's smallest height at scale 1 and how far it may reach past the bounds. */
+export const screenLimits: Readonly<{ minHeight: number; boundsMargin: number }>;
 /** World 0.9 limits the world checks apply: character instances, characters per path, path points in total, minimum arc chord (m). */
 export const worldLimits: Readonly<{ characters: number; charactersPerPath: number; pathPoints: number; arcChord: number }>;
 /** glTF extensions a scene may list in extensionsRequired for a world format. */
