@@ -1,7 +1,7 @@
 // Type declarations for lib/validate.mjs.
 
 /** Schema kinds `validate` accepts; `scene` checks a scene.gltf against its world format. */
-export type ContractKind = 'world' | 'extension' | 'screen-type' | 'ipc' | 'scene' | 'object' | 'library' | 'library-releases' | 'import';
+export type ContractKind = 'world' | 'extension' | 'screen-type' | 'ipc' | 'scene' | 'object' | 'library' | 'library-releases' | 'import' | 'project';
 
 export interface ValidationResult {
   valid: boolean;

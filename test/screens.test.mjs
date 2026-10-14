@@ -118,17 +118,25 @@ test('IPC 0.27 inherits every 0.26 definition except the listed changes and is n
  const old=schema('0.26'),latest=schema('0.27');
  assert.ok(latest.title.includes('0.27'));
  assert.equal(latest.$id,'https://hyprune.com/schema/v0.27/ipc.schema.json');
- const changed=['session.hello.result','catalogEntry','objectInstance','objects.configure.params','objects.place.params'];
+ const changed=['session.hello.result','catalogEntry','objectInstance','objects.configure.params','objects.place.params','objectRef','state','state.delta.notification'];
  for(const key of Object.keys(old.$defs))if(!changed.includes(key))assert.deepEqual(latest.$defs[key],old.$defs[key],key);
- assert.deepEqual(Object.keys(latest.$defs).filter(k=>!(k in old.$defs)),['workspaceId','screenAspect','catalogScreen','instanceScreen','catalogProvenance','catalogImported']);
+ assert.deepEqual(Object.keys(latest.$defs).filter(k=>!(k in old.$defs)),['workspaceId','screenAspect','catalogScreen','instanceScreen','catalogProvenance','catalogImported','builderState']);
  for(const key of ['catalogEntry','objectInstance']){
   const added=key==='catalogEntry'?['screen','warnings','provenance','imported']:['screen'];
-  assert.deepEqual(Object.fromEntries(Object.entries(latest.$defs[key].properties).filter(([k])=>!added.includes(k))),old.$defs[key].properties,key);
+  const same=props=>Object.fromEntries(Object.entries(props).filter(([k])=>!added.includes(k) && k!=='source'));
+  assert.deepEqual(same(latest.$defs[key].properties),same(old.$defs[key].properties),key);
   assert.deepEqual(latest.$defs[key].required,[...old.$defs[key].required,...added],key);
  }
  const patch=d=>d.$defs['objects.configure.params'].properties.patch;
  assert.deepEqual(strip(patch(latest).properties,'workspace'),patch(old).properties);
  assert.deepEqual(strip(latest.$defs['objects.place.params'].properties,'workspace'),old.$defs['objects.place.params'].properties);
+ // Builder worlds (RFC-0014 phase C): a world catalog source, world/<id> refs and the builder state key.
+ assert.deepEqual(latest.$defs.catalogEntry.properties.source.enum,[...old.$defs.catalogEntry.properties.source.enum,'world']);
+ assert.equal(latest.$defs.objectRef.pattern,old.$defs.objectRef.pattern.replace('|user/[a-z][a-z0-9-]*)$','|user/[a-z][a-z0-9-]*|world/[a-z][a-z0-9-]*)$'));
+ assert.deepEqual(Object.fromEntries(Object.entries(latest.$defs.state.properties).filter(([k])=>k!=='builder')),old.$defs.state.properties);
+ assert.deepEqual(latest.$defs.state.required,[...old.$defs.state.required,'builder']);
+ const changes=d=>d.$defs['state.delta.notification'].properties.params.properties.changes.properties;
+ assert.deepEqual(Object.fromEntries(Object.entries(changes(latest)).filter(([k])=>k!=='builder')),changes(old));
  assert.deepEqual(latest.$defs['session.hello.params'],old.$defs['session.hello.params'],'no new grant');
  const hello=latest.$defs['session.hello.result'].properties,oldHello=old.$defs['session.hello.result'].properties;
  assert.equal(hello.protocol.const,'0.27');

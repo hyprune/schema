@@ -2,7 +2,7 @@
 
 > **Hyprune** is an explorable, world-driven desktop environment for Hyprland: your workspaces become places you can walk through, with live windows on the walls. This repository holds the versioned **schemas** for world packages, IPC and manifests, and their validator. Install Hyprune through the [hyprune](https://github.com/hyprune/hyprune) repository (starter kits, Nix, Arch); learn more at [hyprune.com](https://hyprune.com). Licence: MIT.
 
-Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.9), the IPC protocol (0.1–0.27, 0.27 draft), object and library manifests (0.9, drafts 0.10 and 0.11), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
+Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.9, draft 0.11), the IPC protocol (0.1–0.27, 0.27 draft), object and library manifests (0.9, drafts 0.10 and 0.11), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
 
 ## Install
 
@@ -273,6 +273,9 @@ the `mount` trait for workspace screens (RFC-0011 amendment): 1–4 anchors, at 
 inert. `screenAspect(size)` and `screenLimits` are exported. In 0.11 the size budgets of
 ordinary objects are recommendations (warnings) below `objectHardCaps`; `import.json`
 (`v0.11/import.schema.json`, `validate('import', record)`) records how an object was imported.
+World format **0.11** (draft, `v0.11/world.schema.json`) adds `atmosphere.panorama` and takes
+object format 0.11 assets; `v0.11/project.schema.json` (`validate('project', doc)`) describes a
+builder world folder's `builder/project.json` (RFC-0014).
 
 ```js
 import { validate, objectFormats } from '@hyprune/schema';
