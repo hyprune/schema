@@ -40,6 +40,7 @@
     "v0*/**",
     "extensions/",
     "registry/",
+    "motion/",
     "examples/",
     "CHANGELOG.md",
     "README.md",

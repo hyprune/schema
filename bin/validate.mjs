@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { readFileSync } from 'node:fs';
-import { validate, validateRegistry } from '../lib/validate.mjs';
+import { validate, validateRegistry, validateMotion } from '../lib/validate.mjs';
 const registryKinds = ['registry-index', 'registry-entry', 'release-record', 'sources'];
 const [kind, file, method, version, worldFile, asset, ...extra] = process.argv.slice(2);
 // For kind `object` the fifth argument is the object's glTF (.gltf or .glb) for the cross-checks.
@@ -11,11 +11,12 @@ const gltfJson = path => {
   return JSON.parse(bytes.subarray(20, 20 + bytes.readUInt32LE(12)).toString('utf8'));
 };
 if (!kind || !file || extra.length || ((worldFile || asset) && kind !== 'scene' && kind !== 'object') || (asset && kind === 'object') ||
-    (registryKinds.includes(kind) && method && method !== '-')) {
+    ((registryKinds.includes(kind) || kind === 'motion') && method && method !== '-')) {
   console.error('Usage: hyprune-validate <world|extension|screen-type|ipc> <file.json|-> [response-method|-] [contract-version]\n' +
                 '       hyprune-validate scene <scene.gltf> - <world-format> <world.json> [object-asset-id]\n' +
                 '       hyprune-validate <object|library|library-releases> <file.json|-> [-] [format] [object scene.gltf|.glb]\n' +
-                '       hyprune-validate <registry-index|registry-entry|release-record|sources> <file.json|-> [-] [registry version]\n(in this repository: npm run validate -- ...)');
+                '       hyprune-validate <registry-index|registry-entry|release-record|sources> <file.json|-> [-] [registry version]\n' +
+                '       hyprune-validate motion <motion.json|-> [-] [motion version]\n(in this repository: npm run validate -- ...)');
   process.exitCode = 2;
 } else {
   try {
@@ -26,7 +27,8 @@ if (!kind || !file || extra.length || ((worldFile || asset) && kind !== 'scene' 
     const value = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes));
     const options = kind === 'object' ? { gltf: worldFile ? gltfJson(worldFile) : undefined }
       : { world: worldFile ? JSON.parse(readFileSync(worldFile, 'utf8')) : undefined, asset };
-    const result = registryKinds.includes(kind) ? validateRegistry(kind, value, version || undefined)
+    const result = kind === 'motion' ? validateMotion(value, version || undefined)
+      : registryKinds.includes(kind) ? validateRegistry(kind, value, version || undefined)
       : validate(kind, value, method === '-' ? undefined : method, version || undefined, options);
     for (const warning of result.warnings || []) console.error(`warning: ${warning}`);
     if (result.valid) console.log(`VALID ${kind}: ${file}`);
