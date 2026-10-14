@@ -84,7 +84,7 @@ const entry=(over={})=>({ref:rack,source:'user',id:'workspace-screen-wall',versi
  category:'signage',tags:['screen'],traits:['collidable','movable','mount'],surfaces:['wall'],scale:[0.5,2],
  bounds:{min:[-1.66,0,0],max:[1.66,1.92,0.08]},triangles:220,gpuBytes:65536,collisionTriangles:12,thumbnail:null,license:'CC0-1.0',
  library:null,versions:[],state:'ready',placeable:true,reason:null,errors:[],machine:null,companion:null,
- screen:{aspect:'16:9',size:[3.2,1.8],mountType:'hanging-wall'},...over});
+ screen:{aspect:'16:9',size:[3.2,1.8],mountType:'hanging-wall'},warnings:[],provenance:{license:'CC0-1.0',author:'Example Author',source:'unknown'},imported:null,...over});
 const strip=(o,key)=>{const {[key]:_,...rest}=o;return rest;};
 
 test('IPC 0.27 objects state: instances and catalog entries carry screen (required, nullable)',()=>{
@@ -120,10 +120,11 @@ test('IPC 0.27 inherits every 0.26 definition except the listed changes and is n
  assert.equal(latest.$id,'https://hyprune.com/schema/v0.27/ipc.schema.json');
  const changed=['session.hello.result','catalogEntry','objectInstance','objects.configure.params','objects.place.params'];
  for(const key of Object.keys(old.$defs))if(!changed.includes(key))assert.deepEqual(latest.$defs[key],old.$defs[key],key);
- assert.deepEqual(Object.keys(latest.$defs).filter(k=>!(k in old.$defs)),['workspaceId','screenAspect','catalogScreen','instanceScreen']);
+ assert.deepEqual(Object.keys(latest.$defs).filter(k=>!(k in old.$defs)),['workspaceId','screenAspect','catalogScreen','instanceScreen','catalogProvenance','catalogImported']);
  for(const key of ['catalogEntry','objectInstance']){
-  assert.deepEqual(strip(latest.$defs[key].properties,'screen'),old.$defs[key].properties,key);
-  assert.deepEqual(latest.$defs[key].required,[...old.$defs[key].required,'screen'],key);
+  const added=key==='catalogEntry'?['screen','warnings','provenance','imported']:['screen'];
+  assert.deepEqual(Object.fromEntries(Object.entries(latest.$defs[key].properties).filter(([k])=>!added.includes(k))),old.$defs[key].properties,key);
+  assert.deepEqual(latest.$defs[key].required,[...old.$defs[key].required,...added],key);
  }
  const patch=d=>d.$defs['objects.configure.params'].properties.patch;
  assert.deepEqual(strip(patch(latest).properties,'workspace'),patch(old).properties);

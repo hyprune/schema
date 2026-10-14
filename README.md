@@ -270,7 +270,9 @@ change until world format 0.10 is defined. `v0.11/` is a second **draft** that s
 the `mount` trait for workspace screens (RFC-0011 amendment): 1–4 anchors, at most one
 `mounted-workspace` anchor, 16:9 (within 0.5 %) or 21:9 (aspect 2.33–2.39), at least
 0.9 m high, its rectangle inside the bounds grown by 0.1 m; `tool-mount` anchors are
-inert. `screenAspect(size)` and `screenLimits` are exported.
+inert. `screenAspect(size)` and `screenLimits` are exported. In 0.11 the size budgets of
+ordinary objects are recommendations (warnings) below `objectHardCaps`; `import.json`
+(`v0.11/import.schema.json`, `validate('import', record)`) records how an object was imported.
 
 ```js
 import { validate, objectFormats } from '@hyprune/schema';

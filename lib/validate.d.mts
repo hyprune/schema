@@ -1,7 +1,7 @@
 // Type declarations for lib/validate.mjs.
 
 /** Schema kinds `validate` accepts; `scene` checks a scene.gltf against its world format. */
-export type ContractKind = 'world' | 'extension' | 'screen-type' | 'ipc' | 'scene' | 'object' | 'library' | 'library-releases';
+export type ContractKind = 'world' | 'extension' | 'screen-type' | 'ipc' | 'scene' | 'object' | 'library' | 'library-releases' | 'import';
 
 export interface ValidationResult {
   valid: boolean;
@@ -42,6 +42,8 @@ export interface ValidateOptions {
   measured?: { bounds?: { min: number[]; max: number[] }; maxTextureSize?: number; gpuBytes?: number };
   /** Kind library: each listed object's parsed object.json, keyed by directory name. */
   objects?: Record<string, { id?: string; formatVersion?: string }>;
+  /** Kind object: the directory's parsed import.json (RFC-0014), validated as kind `import`. */
+  importRecord?: unknown;
 }
 
 /**
@@ -72,6 +74,8 @@ export const objectLimits: Readonly<Record<string, number>>;
 export function screenAspect(size: readonly [number, number] | readonly number[]): '16:9' | '21:9' | null;
 /** Workspace screen limits: the anchor's smallest height at scale 1 and how far it may reach past the bounds. */
 export const screenLimits: Readonly<{ minHeight: number; boundsMargin: number }>;
+/** Object format 0.11: hard caps for ordinary objects; objectLimits become recommendations (warnings) below them. */
+export const objectHardCaps: Readonly<{ triangles: number; textureSize: number; gpuBytes: number; collisionTriangles: number; files: number; directoryBytes: number; fileBytes: number }>;
 /** World 0.9 limits the world checks apply: character instances, characters per path, path points in total, minimum arc chord (m). */
 export const worldLimits: Readonly<{ characters: number; charactersPerPath: number; pathPoints: number; arcChord: number }>;
 /** glTF extensions a scene may list in extensionsRequired for a world format. */
