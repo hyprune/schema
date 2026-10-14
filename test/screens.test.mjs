@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {validate, ipcProtocols, objectFormats, screenAspect} from '../lib/validate.mjs';
 
-// Object format 0.11 (draft) and IPC 0.27: workspace screens, the mount trait's
+// Object format 0.11 and IPC 0.27: workspace screens, the mount trait's
 // mounted-workspace anchor placed as a user object that shows a workspace.
 const read=path=>JSON.parse(readFileSync(new URL(`../${path}`,import.meta.url)));
 const schema=v=>read(`v${v}/ipc.schema.json`);

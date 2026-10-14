@@ -235,7 +235,7 @@ raw value, condition (`fresh`, `stale`, `missing`, `error`) and `publishedAt`
 grant; every other 0.23 definition is unchanged. See the RFC-0013 amendment
 "Live state in IPC 0.24".
 
-IPC **0.25** (draft, the RFC-0010 companions amendment) adds the companion: a
+IPC **0.25** (the RFC-0010 companions amendment) adds the companion: a
 required `companion` state key (the chosen ref and name, its state, mode
 `follow`/`stay`/`route`, bound path, activity and position), a `companion`
 capability on catalog entries, the aimed interaction type `companion`, and
@@ -252,7 +252,7 @@ state gains a required `pace` (`walk`/`run`) and `companion.mode` an optional
 up to 128 entries (the apps limit); the object pocket stays at 16. No new
 method, event or grant; every other 0.25 definition is unchanged.
 
-IPC **0.27** (draft) adds workspace screens: catalog entries and object instances
+IPC **0.27** adds workspace screens: catalog entries and object instances
 carry a required, nullable `screen` (an entry's anchor aspect `16:9`/`21:9`, size and
 mount type; an instance's bound `workspace`, its `home` area id in `mounts`, aspect and
 scaled size). `objects.configure` patches and `objects.place` take `workspace`: a
@@ -264,16 +264,16 @@ definition is unchanged.
 Object manifests (`object.json`) and library manifests (`library.json`) use the
 world format numbering and start at **0.9** (`v0.9/object.schema.json`,
 `v0.9/library.schema.json`); `v0.9/library-releases.schema.json` describes the
-meta repository's `libraries/releases.json`. `v0.10/` holds a **draft** that adds
-the `mover` trait, RFC-0013's `machine` trait and the extra slot kinds; it may
-change until world format 0.10 is defined. `v0.11/` is a second **draft** that switches on
+meta repository's `libraries/releases.json`. `v0.10/` holds an unreleased draft that added
+the `mover` trait, RFC-0013's `machine` trait and the extra slot kinds; world format 0.10 is
+not defined, and object format 0.11 (released in @hyprune/schema 0.13.0) carries them on. `v0.11/` switches on
 the `mount` trait for workspace screens (RFC-0011 amendment): 1–4 anchors, at most one
 `mounted-workspace` anchor, 16:9 (within 0.5 %) or 21:9 (aspect 2.33–2.39), at least
 0.9 m high, its rectangle inside the bounds grown by 0.1 m; `tool-mount` anchors are
 inert. `screenAspect(size)` and `screenLimits` are exported. In 0.11 the size budgets of
 ordinary objects are recommendations (warnings) below `objectHardCaps`; `import.json`
 (`v0.11/import.schema.json`, `validate('import', record)`) records how an object was imported.
-World format **0.11** (draft, `v0.11/world.schema.json`) adds `atmosphere.panorama` and takes
+World format **0.11** (`v0.11/world.schema.json`) adds `atmosphere.panorama` and takes
 object format 0.11 assets; `v0.11/project.schema.json` (`validate('project', doc)`) describes a
 builder world folder's `builder/project.json` (RFC-0014).
 

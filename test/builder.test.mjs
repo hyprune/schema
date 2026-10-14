@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {validate, worldFormats} from '../lib/validate.mjs';
 
-// World format 0.11 (draft: panorama skies, builder worlds, object format 0.11 assets),
+// World format 0.11 (panorama skies, builder worlds, object format 0.11 assets),
 // builder/project.json (projectVersion 0.1) and IPC 0.27's builder state (RFC-0014 phase C).
 const read=path=>JSON.parse(readFileSync(new URL(`../${path}`,import.meta.url)));
 const pose={position:[0,0,0],rotation:[0,0,0,1]};
