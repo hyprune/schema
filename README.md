@@ -259,6 +259,11 @@ scaled size). `objects.configure` patches and `objects.place` take `workspace`: 
 number 1–9999, `"next-free"` or null. No new method, event or grant; every other 0.26
 definition is unchanged.
 
+IPC **0.28** (draft, the RFC-0010 shared clip library amendment) adds character styles
+(`characterStyle` on object instances, `npcs.spawn`, `npcs.bind` and the companion), the
+companion's dances (interaction type `dance` with `options`, `interaction.choose` `option`,
+activity `dancing`) and `catalogEntry.motion`. Every other 0.27 definition is unchanged.
+
 ## Objects and libraries (RFC-0011)
 
 Object manifests (`object.json`) and library manifests (`library.json`) use the
@@ -276,6 +281,10 @@ ordinary objects are recommendations (warnings) below `objectHardCaps`; `import.
 World format **0.11** (`v0.11/world.schema.json`) adds `atmosphere.panorama` and takes
 object format 0.11 assets; `v0.11/project.schema.json` (`validate('project', doc)`) describes a
 builder world folder's `builder/project.json` (RFC-0014).
+
+Motion packs (`motion/<id>/motion.json`, `motion/v0.1/motion.schema.json`, draft) hold clips on
+a named skeleton for every character with that skeleton: `validateMotion(doc)`,
+`npm run validate -- motion motion.json`.
 
 ```js
 import { validate, objectFormats } from '@hyprune/schema';
