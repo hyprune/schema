@@ -626,3 +626,12 @@ RFC-0010 shared clip library amendment). No object or world format change. IPC 0
   override; null is refused). Returns the state.
 - `examples/input-v3.json`: the default keymap, input version 3.
 - No new event, grant or state key; `session.hello` reports `0.30` and lists both methods.
+
+## Builder project 0.2 (draft): Open Plain, sky presets, the floor
+
+- `v0.11/project.schema.json` (`validate('project')`) now takes `projectVersion` `0.1` (unchanged,
+  exact shape) or `0.2` (draft). 0.2 adds the `open-plain@0.2` starter (`flat-land@0.1` stays for
+  upgraded folders), `sky.preset` (a built-in sky's id, or null for the user's image), an optional
+  `floor` `{preset, image, tile (0.25-100 m), license, author, source}` (exactly one of preset and
+  image; the licence an SPDX expression) and up to 512 placements (0.1: 128).
+- No world format or IPC change.
