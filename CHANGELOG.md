@@ -610,3 +610,17 @@ RFC-0010 shared clip library amendment). No object or world format change. IPC 0
   window turns toward you and follows the centre ray.
 - No new event or grant; `session.hello` reports `0.29` and lists `recording.label`.
   Inheritance test included.
+
+## IPC 0.30 (draft): global settings presets and overrides
+
+- `settings.get` (state.read) and `settings.set` (world.control). One global preset (`auto`, `low`,
+  `medium`, `high`, `ultra`, `usb-c`) gives every graphics and player setting a default; explicit
+  user overrides win and survive preset switches. `settingsState`: `preset`, `presets` (each with
+  `values` it sets and `defaults` for every governed setting), `settings` (`"<graphics|player>.<key>"`:
+  `settingsEntry` {value, default, source: user | lua | preset}), `overrides` (count),
+  `keymapDefaults` (the default input config) and the settings file `path` and `error`.
+- `settings.set {preset?, set?, reset?, resetAll?}`, applied as resetAll (every graphics, player and
+  keymap override; the preset stays), preset, reset (back to the preset's default), set (an explicit
+  override; null is refused). Returns the state.
+- `examples/input-v3.json`: the default keymap, input version 3.
+- No new event, grant or state key; `session.hello` reports `0.30` and lists both methods.
