@@ -661,6 +661,16 @@ RFC-0010 shared clip library amendment). No object or world format change. IPC 0
   (`validate('primitive')`, primitiveVersion 0.1): how a primitive object directory was generated
   `{shape, size, steps?, material {key, name, colour, textured, emissive, digest}, generator}`; catalog primitives carry the material's `glow`.
 - Builder project 0.2 (draft) placements take an optional unique `key`.
+- **Data-driven behaviours** (same draft): `objects.configure` patch `behaviours` (the whole list,
+  at most 8, `[]` removes them; user placements only): each `behaviour` has a `key`, a
+  `property` (`scale` per axis about an `anchor` face, `move` in metres, `rotate` in degrees
+  about the anchor, `colour`, `glow` with a `colour`, `visible` with `above`/`below`, `texture`
+  offset or `mode: "scroll"`), an optional `input` `{source, key, min, max}` (default key
+  `value` of `com.hyprune.sources.<placement id>`, 0..100), `from` and `to`, `easing` and
+  `smoothing`. Instances carry required `behaviours` (`behaviourState` `{key, property,
+  condition, value, t}`, or null). Display only: collision and placement rules keep the rest
+  pose. Builder project 0.2 placements carry `behaviours` (keys unique, min and max differ,
+  visible needs a threshold).
 
 ## IPC 0.32 (draft): content, sources and registry (RFC-0015)
 
@@ -673,7 +683,7 @@ RFC-0010 shared clip library amendment). No object or world format change. IPC 0
   changes), with `contentInstall`, `contentSource`, `contentJob`, `contentPlan`,
   `contentPlanPackage`, `registryEntry` and `registryVersion`. Job stages have no `pending`:
   0.32 has no pending swaps of the loaded world (`content.commit` comes later).
-- Every 0.31 definition is unchanged (`test/content-ipc.test.mjs`).
+- Every 0.31 definition is unchanged (`test/content-ipc.test.mjs`), the data-driven behaviours of the 0.31 draft included.
 
 ## Registry 0.1: the content lock (RFC-0015 P3)
 

@@ -21,7 +21,7 @@ test('IPC 0.31 inherits every 0.30 definition except the listed changes and is n
  assert.ok(latest.title.includes('0.31'));
  assert.equal(latest.$id,'https://hyprune.com/schema/v0.31/ipc.schema.json');
  for(const key of Object.keys(old.$defs))if(!changed.includes(key))assert.deepEqual(latest.$defs[key],old.$defs[key],key);
- assert.deepEqual(Object.keys(latest.$defs).filter(k=>!(k in old.$defs)),['objectKey','catalogPrimitive']);
+ assert.deepEqual(Object.keys(latest.$defs).filter(k=>!(k in old.$defs)),['objectKey','catalogPrimitive','behaviour','behaviourState']);
  const hello=latest.$defs['session.hello.result'].properties,oldHello=old.$defs['session.hello.result'].properties;
  assert.equal(hello.protocol.const,'0.31');
  const {protocol:_a,...rest}=hello,{protocol:_b,...oldRest}=oldHello;
