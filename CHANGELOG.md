@@ -590,9 +590,11 @@ RFC-0010 shared clip library amendment). No object or world format change. IPC 0
 
 ## IPC 0.29 (draft): motion feel
 
-- `inputConfig.version` is `3`: world mode binds sprint to `Control_L`, down to `Shift_L` and
-  `record.toggle` to `Ctrl+r` by default (a version 2 file is upgraded once by core). Peers
-  that negotiate an older version keep seeing and sending version 2.
+- `inputConfig.version` is `3`: world mode binds `record.toggle` to `Ctrl+r` by default (a
+  version 2 file gains it once, where it is free); sprint stays `Shift_L` and down `Control_L`
+  (an early 0.29 draft swapped them; core restores a keymap still at that swap once). Peers
+  that negotiate an older version keep seeing and sending version 2. Description only: the
+  schema shapes are unchanged.
 - `graphicsConfig` (required) and `graphicsPatch` gain `frame_pacing`: `even`, `max_rate` or
   null (the quality preset's value; every preset is `even`). Even pacing shows a rate-capped
   renderer's new frames on a steady refresh divisor at a constant latency.

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {validate, ipcProtocols} from '../lib/validate.mjs';
 
-// IPC 0.29 (draft): motion feel. Input version 3 (Ctrl sprints, Shift goes down, Ctrl+R
+// IPC 0.29 (draft): motion feel. Input version 3 (Ctrl+R
 // records), graphics.frame_pacing.
 const read=path=>JSON.parse(readFileSync(new URL(`../${path}`,import.meta.url)));
 const schema=v=>read(`v${v}/ipc.schema.json`);
