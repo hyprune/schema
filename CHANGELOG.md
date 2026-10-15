@@ -596,5 +596,12 @@ RFC-0010 shared clip library amendment). No object or world format change. IPC 0
 - `graphicsConfig` (required) and `graphicsPatch` gain `frame_pacing`: `even`, `max_rate` or
   null (the quality preset's value; every preset is `even`). Even pacing shows a rate-capped
   renderer's new frames on a steady refresh divisor at a constant latency.
-- No new method, event or grant yet; `session.hello` reports `0.29`. Inheritance test included.
-  The debug recording additions follow in this draft.
+- The debug recording (Ctrl+R, recording format 2): `recordingStatus` gains required `elapsedMs`,
+  `stats` (`recordingStats`: presents and new frames per second, present-interval percentiles,
+  dt mean/std/max, missed refreshes, hitches) and `last` (the last finished recording and its
+  label); `frame` may reach 432001 (30 minutes of live frames). New required state key
+  `recording` (`recordingState`: active, startedAt on the core steady clock, path, stats, last).
+  New method `recording.label` `{label, meta?}` (input.control): renames the last finished
+  recording `rec-<time>-<slug>.jsonl` and writes a sidecar with the label; returns the status.
+- No new event or grant; `session.hello` reports `0.29` and lists `recording.label`.
+  Inheritance test included.
