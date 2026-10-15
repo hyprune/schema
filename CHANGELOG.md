@@ -661,3 +661,16 @@ RFC-0010 shared clip library amendment). No object or world format change. IPC 0
   (`validate('primitive')`, primitiveVersion 0.1): how a primitive object directory was generated
   `{shape, size, steps?, material {key, name, colour, textured, emissive, digest}, generator}`; catalog primitives carry the material's `glow`.
 - Builder project 0.2 (draft) placements take an optional unique `key`.
+
+## IPC 0.32 (draft): content, sources and registry (RFC-0015)
+
+- Methods `content.install`, `content.confirm`, `content.cancel`, `content.update`,
+  `content.rollback`, `content.pin`, `content.remove`, `sources.list`, `sources.add`,
+  `sources.set`, `sources.remove`, `sources.refresh`, `registry.list` and `registry.entry`.
+  Every mutation returns `{jobId}`; `confirm` and `cancel` return `{revision}`.
+- Grant `content.control` for the mutations; reads take `state.read`.
+- State key `content {revision, installs, updates, sources, jobs}` (also in `state.delta`
+  changes), with `contentInstall`, `contentSource`, `contentJob`, `contentPlan`,
+  `contentPlanPackage`, `registryEntry` and `registryVersion`. Job stages have no `pending`:
+  0.32 has no pending swaps of the loaded world (`content.commit` comes later).
+- Every 0.31 definition is unchanged (`test/content-ipc.test.mjs`).
