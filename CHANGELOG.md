@@ -653,6 +653,7 @@ RFC-0010 shared clip library amendment). No object or world format change. IPC 0
 - Catalog entries carry required `primitive` (`catalogPrimitive` `{shape, size, material {key,
   name, colour, textured}}` from the entry's `primitive.json`, else null). `builderState.placements`
   may reach 512.
+- Error `data` may carry `hint` (how to fix it), `field`, and for `key.taken` the placement's `id` and `key`.
 - No new method, event or grant; `session.hello` reports `0.31`.
 - `v0.11/material.schema.json` (`validate('material')`, materialVersion 0.1): a builder material
   `{key, name, colour, texture: null | {image, tile, width, height}, emissive: null | {colour,

@@ -14,7 +14,7 @@ const ok=(method,params,v='0.31')=>validate('ipc',req(method,params),undefined,v
 const okResult=(method,result,v='0.31')=>validate('ipc',res(result),method,v).valid;
 const pose={position:[1,0,-2],rotation:[0,0,0,1]};
 const changed=['session.hello.result','objects.place.params','objects.place.result','objects.transform.params','objects.transform.result',
- 'objects.configure.params','objects.configure.result','objects.remove.params','objects.remove.result','objectInstance','catalogEntry','builderState'];
+ 'objects.configure.params','objects.configure.result','objects.remove.params','objects.remove.result','objectInstance','catalogEntry','builderState','error'];
 
 test('IPC 0.31 inherits every 0.30 definition except the listed changes and is negotiable',()=>{
  const old=schema('0.30'),latest=schema('0.31');
@@ -53,6 +53,14 @@ test('transform, configure and remove take an id or a key; configure swaps ref a
  assert.ok(ok('objects.remove',{all:true}));
  assert.ok(!ok('objects.remove',{key:'tower'},'0.30'));
  assert.ok(okResult('objects.remove',{revision:4,removed:false}));
+});
+
+test('errors may carry a hint, a field and the placement a taken key names',()=>{
+ const err=data=>validate('ipc',{jsonrpc:'2.0',id:'p1',error:{code:-32005,message:'the key beacon names Box (u-1a2b3c)',data}},undefined,'0.31').valid;
+ assert.ok(err({retryable:false,rule:'key.taken',id:'u-1a2b3c',key:'beacon',hint:'Use ifExists: update to move it, or another key'}));
+ assert.ok(err({retryable:false,rule:'budget',field:'scale'}));
+ assert.ok(!err({retryable:false,extra:1}));
+ assert.ok(!validate('ipc',{jsonrpc:'2.0',id:'p1',error:{code:-32005,message:'x',data:{retryable:false,hint:'h'}}},undefined,'0.30').valid,'0.30 has no hint');
 });
 
 test('state: instances carry key; catalog entries carry primitive; folders hold 512 placements',()=>{
