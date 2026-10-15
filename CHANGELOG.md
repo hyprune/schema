@@ -587,3 +587,14 @@ Publishes IPC 0.28 and motion packs (`motion/v0.1/motion.schema.json`, motionVer
 which were drafts until now: character styles, companion dances and catalog motion (the
 RFC-0010 shared clip library amendment). No object or world format change. IPC 0.28 inherits
 0.27.
+
+## IPC 0.29 (draft): motion feel
+
+- `inputConfig.version` is `3`: world mode binds sprint to `Control_L`, down to `Shift_L` and
+  `record.toggle` to `Ctrl+r` by default (a version 2 file is upgraded once by core). Peers
+  that negotiate an older version keep seeing and sending version 2.
+- `graphicsConfig` (required) and `graphicsPatch` gain `frame_pacing`: `even`, `max_rate` or
+  null (the quality preset's value; every preset is `even`). Even pacing shows a rate-capped
+  renderer's new frames on a steady refresh divisor at a constant latency.
+- No new method, event or grant yet; `session.hello` reports `0.29`. Inheritance test included.
+  The debug recording additions follow in this draft.
