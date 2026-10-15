@@ -659,5 +659,5 @@ RFC-0010 shared clip library amendment). No object or world format change. IPC 0
   `{key, name, colour, texture: null | {image, tile, width, height}, emissive: null | {colour,
   strength}, roughness, metallic, license, author, source}`. `v0.11/primitive.schema.json`
   (`validate('primitive')`, primitiveVersion 0.1): how a primitive object directory was generated
-  `{shape, size, steps?, material {key, name, colour, textured, digest}, generator}`.
+  `{shape, size, steps?, material {key, name, colour, textured, emissive, digest}, generator}`; catalog primitives carry the material's `glow`.
 - Builder project 0.2 (draft) placements take an optional unique `key`.

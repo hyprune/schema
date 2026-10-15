@@ -78,7 +78,7 @@ test('state: instances carry key; catalog entries carry primitive; folders hold 
 
 const material=(over={})=>({materialVersion:'0.1',key:'oak',name:'Oak planks',colour:'#ffffff',texture:{image:'texture.jpg',tile:1.2,width:1024,height:1024},
  emissive:null,roughness:0.8,metallic:0,license:'CC0-1.0',author:'Ada',source:'https://example.com/oak',...over});
-const primitive=(over={})=>({primitiveVersion:'0.1',shape:'box',size:[2,0.2,1],material:{key:'oak',name:'Oak planks',colour:'#ffffff',textured:true,
+const primitive=(over={})=>({primitiveVersion:'0.1',shape:'box',size:[2,0.2,1],material:{key:'oak',name:'Oak planks',colour:'#ffffff',textured:true,emissive:null,
  digest:'sha256:'+'a'.repeat(64)},generator:{name:'hyprune builder primitive',version:'0.13.0'},...over});
 
 test('material.json and primitive.json records',()=>{
@@ -95,6 +95,7 @@ test('material.json and primitive.json records',()=>{
  assert.ok(validate('primitive',primitive({shape:'cube',size:[1,2,1]})).errors.some(e=>e.includes('cube')));
  assert.ok(validate('primitive',primitive({shape:'stairs'})).errors.some(e=>e.includes('steps')));
  assert.ok(validate('primitive',primitive({steps:3})).errors.some(e=>e.includes('only stairs')));
+ assert.deepEqual(validate('primitive',primitive({material:{key:null,name:'Glow',colour:'#202020',textured:false,emissive:{colour:'#30e0ff',strength:4},digest:'sha256:'+'b'.repeat(64)}})).errors,[]);
  for(const bad of [{shape:'torus'},{size:[0,1,1]},{size:[1,1]},{material:{key:null,name:'x',colour:'#000000',textured:false}}])
   assert.equal(validate('primitive',primitive(bad)).valid,false,JSON.stringify(bad));
 });
