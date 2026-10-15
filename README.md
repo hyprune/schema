@@ -2,7 +2,7 @@
 
 > **Hyprune** is an explorable, world-driven desktop environment for Hyprland: your workspaces become places you can walk through, with live windows on the walls. This repository holds the versioned **schemas** for world packages, IPC and manifests, and their validator. Install Hyprune through the [hyprune](https://github.com/hyprune/hyprune) repository (starter kits, Nix, Arch); learn more at [hyprune.com](https://hyprune.com). Licence: MIT.
 
-Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.9, draft 0.11), the IPC protocol (0.1–0.27, 0.27 draft), object and library manifests (0.9, drafts 0.10 and 0.11), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
+Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.9 and 0.11), the IPC protocol (0.1–0.28), object and library manifests (0.9 and 0.11; 0.10 an unreleased draft), motion packs (0.1), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
 
 ## Install
 
@@ -259,7 +259,7 @@ scaled size). `objects.configure` patches and `objects.place` take `workspace`: 
 number 1–9999, `"next-free"` or null. No new method, event or grant; every other 0.26
 definition is unchanged.
 
-IPC **0.28** (draft, the RFC-0010 shared clip library amendment) adds character styles
+IPC **0.28** (the RFC-0010 shared clip library amendment) adds character styles
 (`characterStyle` on object instances, `npcs.spawn`, `npcs.bind` and the companion), the
 companion's dances (interaction type `dance` with `options`, `interaction.choose` `option`,
 activity `dancing`) and `catalogEntry.motion`. Every other 0.27 definition is unchanged.
@@ -282,7 +282,7 @@ World format **0.11** (`v0.11/world.schema.json`) adds `atmosphere.panorama` and
 object format 0.11 assets; `v0.11/project.schema.json` (`validate('project', doc)`) describes a
 builder world folder's `builder/project.json` (RFC-0014).
 
-Motion packs (`motion/<id>/motion.json`, `motion/v0.1/motion.schema.json`, draft) hold clips on
+Motion packs (`motion/<id>/motion.json`, `motion/v0.1/motion.schema.json`, released in @hyprune/schema 0.14.0) hold clips on
 a named skeleton for every character with that skeleton: `validateMotion(doc)`,
 `npm run validate -- motion motion.json`.
 

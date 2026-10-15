@@ -558,7 +558,7 @@ worlds, `builder/project.json` (projectVersion 0.1) and the IPC 0.27 `builder` s
 Object format 0.10 stays an unreleased draft (world format 0.10 is not defined); 0.11 carries
 its additions. IPC 0.27 inherits 0.26.
 
-## Motion packs (motion.json 0.1) and IPC 0.28 (drafts): the shared clip library
+## Motion packs (motion.json 0.1) and IPC 0.28: the shared clip library
 
 RFC-0010 amendment "Shared clip library": clips on a named skeleton that every character with
 that skeleton can play.
@@ -572,7 +572,7 @@ that skeleton can play.
   `motionClipName(role, style)` gives the clip name a character plays (`walk_confident`,
   `sit` for sit-down, `sit_idle` for seated-idle). CLI kind `motion`. No object or world
   format change: core takes a pack's clips onto any character whose skeleton matches.
-- IPC 0.28 (draft) inherits 0.27 and adds: definitions `motionStyle`, `characterStyle`
+- IPC 0.28 inherits 0.27 and adds: definitions `motionStyle`, `characterStyle`
   (`{walk?, run?, idle?}`), `catalogMotion`, `interactionOption`; required `catalogEntry.motion`
   (null, or the styles per role, dances and packs of a character); required
   `objectInstance.style`; `style` on `npcs.spawn` and `npcs.bind`; the companion's required
@@ -580,3 +580,10 @@ that skeleton can play.
   type `dance` with required, nullable `options` (one per dance), and `interaction.choose`
   `option`. No new method, event or grant; `session.hello` reports `0.28`. Inheritance test
   included.
+
+## 0.14.0 — 2026-10-15
+
+Publishes IPC 0.28 and motion packs (`motion/v0.1/motion.schema.json`, motionVersion 0.1),
+which were drafts until now: character styles, companion dances and catalog motion (the
+RFC-0010 shared clip library amendment). No object or world format change. IPC 0.28 inherits
+0.27.
