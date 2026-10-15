@@ -668,7 +668,7 @@ RFC-0010 shared clip library amendment). No object or world format change. IPC 0
   offset or `mode: "scroll"`), an optional `input` `{source, key, min, max}` (default key
   `value` of `com.hyprune.sources.<placement id>`, 0..100), `from` and `to`, `easing` and
   `smoothing`. Instances carry required `behaviours` (`behaviourState` `{key, property,
-  condition, value, t}`, or null). Display only: collision and placement rules keep the rest
+  condition, value, t, behaviour}` with the behaviour as set, or null). Display only: collision and placement rules keep the rest
   pose. Builder project 0.2 placements carry `behaviours` (keys unique, min and max differ,
   visible needs a threshold).
 

@@ -26,7 +26,7 @@ test('objects.configure patch behaviours: each property, 8 at most; 0.30 refuses
 test('instances report their behaviours (null without any)',()=>{
  const d=JSON.parse(readFileSync(new URL('../v0.31/ipc.schema.json',import.meta.url))).$defs;
  assert.ok(d.objectInstance.required.includes('behaviours'));
- assert.deepEqual(d.behaviourState.required,['key','property','condition','value','t']);
+ assert.deepEqual(d.behaviourState.required,['key','property','condition','value','t','behaviour']);
  assert.deepEqual(d.behaviourState.properties.condition.enum,['fresh','stale','missing','error']);
  assert.ok(!('behaviours' in JSON.parse(readFileSync(new URL('../v0.30/ipc.schema.json',import.meta.url))).$defs.objectInstance.properties));
 });
