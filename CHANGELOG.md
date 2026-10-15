@@ -635,3 +635,28 @@ RFC-0010 shared clip library amendment). No object or world format change. IPC 0
   `floor` `{preset, image, tile (0.25-100 m), license, author, source}` (exactly one of preset and
   image; the licence an SPDX expression) and up to 512 placements (0.1: 128).
 - No world format or IPC change.
+
+## IPC 0.31 (draft): primitives and materials in the builder
+
+- **Placement keys** (`objectKey`, a slug of 1-48 characters, unique among the world's
+  placements): `objects.place {key?, ifExists?: "error" | "update"}`; `objects.transform`,
+  `objects.configure` and `objects.remove` take `{key}` instead of `{id}`; `objects.configure`
+  patch `key` (null removes it); instances carry required `key` (null when none). A taken key is
+  refused with rule `key.taken` and the placement's id, or with `ifExists: "update"` that
+  placement moves (and changes its ref) instead (`updated: true`). Removing a missing key
+  succeeds with `removed: false`.
+- **Dry runs:** `dryRun: true` on `objects.place`, `objects.transform` and `objects.configure`
+  checks everything and changes nothing; results say `dryRun: true`.
+- **Asset swaps:** `objects.configure` patch `ref` puts another catalog entry where a user
+  placement stands, keeping its id, key and pose (a primitive rebuilt at another size or with
+  another material).
+- Catalog entries carry required `primitive` (`catalogPrimitive` `{shape, size, material {key,
+  name, colour, textured}}` from the entry's `primitive.json`, else null). `builderState.placements`
+  may reach 512.
+- No new method, event or grant; `session.hello` reports `0.31`.
+- `v0.11/material.schema.json` (`validate('material')`, materialVersion 0.1): a builder material
+  `{key, name, colour, texture: null | {image, tile, width, height}, emissive: null | {colour,
+  strength}, roughness, metallic, license, author, source}`. `v0.11/primitive.schema.json`
+  (`validate('primitive')`, primitiveVersion 0.1): how a primitive object directory was generated
+  `{shape, size, steps?, material {key, name, colour, textured, digest}, generator}`.
+- Builder project 0.2 (draft) placements take an optional unique `key`.
