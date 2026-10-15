@@ -603,5 +603,10 @@ RFC-0010 shared clip library amendment). No object or world format change. IPC 0
   `recording` (`recordingState`: active, startedAt on the core steady clock, path, stats, last).
   New method `recording.label` `{label, meta?}` (input.control): renames the last finished
   recording `rec-<time>-<slug>.jsonl` and writes a sidecar with the label; returns the status.
+- Player settings (`playerConfig`, `playerOverrides`, `playerPatch`, `playerSettings.ranges`) gain
+  the feel settings: `look_inertia` (0-0.1 s, default 0.03), `move_inertia` (0-0.3 s, 0.05),
+  `view_bob_roll` (0-2 degrees, 0.4), `carry_turn` (0-0.4 s, 0.11) and `carry_follow`
+  (0-0.3 s, 0.04): look and movement smoothing, the walking bob's head tilt, and how a carried
+  window turns toward you and follows the centre ray.
 - No new event or grant; `session.hello` reports `0.29` and lists `recording.label`.
   Inheritance test included.

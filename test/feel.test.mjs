@@ -8,7 +8,7 @@ import {validate, ipcProtocols} from '../lib/validate.mjs';
 const read=path=>JSON.parse(readFileSync(new URL(`../${path}`,import.meta.url)));
 const schema=v=>read(`v${v}/ipc.schema.json`);
 const strip=(o,...keys)=>Object.fromEntries(Object.entries(o).filter(([k])=>!keys.includes(k)));
-const changed=['session.hello.result','inputConfig','graphicsConfig','graphicsPatch','recordingStatus','state','state.delta.notification','request','response'];
+const changed=['session.hello.result','inputConfig','graphicsConfig','graphicsPatch','playerConfig','playerOverrides','playerPatch','playerSettings','recordingStatus','state','state.delta.notification','request','response'];
 
 test('IPC 0.29 inherits every 0.28 definition except the listed changes and is negotiable',()=>{
  const old=schema('0.28'),latest=schema('0.29');
@@ -74,4 +74,14 @@ test('IPC 0.29 state.recording: active with statistics, or idle with the last re
  assert.ok(delta({active:false,startedAt:null,path:null,stats:null,last:{path:'/x/rec.jsonl',label:'walk'}}));
  assert.ok(!delta({active:true},'0.29'));
  assert.ok(!delta({active:false,startedAt:null,path:null,stats:null,last:null},'0.28'),'0.28 has no recording state');
+});
+
+test('IPC 0.29 player feel settings: look/move smoothing, bob roll, carry easing',()=>{
+ const feel=['look_inertia','move_inertia','view_bob_roll','carry_turn','carry_follow'];
+ const latest=schema('0.29').$defs,old=schema('0.28').$defs;
+ assert.deepEqual(strip(latest.playerConfig.properties,...feel),old.playerConfig.properties);
+ assert.deepEqual(latest.playerConfig.required,[...old.playerConfig.required,...feel]);
+ assert.ok(ok('player.set',{patch:{carry_turn:.2,view_bob_roll:0,look_inertia:null}}));
+ assert.ok(!ok('player.set',{patch:{carry_turn:.5}}),'above range');
+ assert.ok(!ok('player.set',{patch:{carry_turn:.2}},'0.28'),'0.28 has no carry easing');
 });
