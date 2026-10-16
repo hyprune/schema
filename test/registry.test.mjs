@@ -50,6 +50,13 @@ test('per-type archive limits', () => {
   index.entries[1].versions[0].files = registryLimits.library.files + 1;
   assert.match(validateRegistry('registry-index', index).errors.join('\n'), /files 4001 exceed the library limit 4000/);
 });
+test('extension is a reserved entry type: it validates, without archive limits', () => {
+  const index = fixture('index.json');
+  index.entries.push({ ...structuredClone(index.entries[1]), id: 'io.github.ada.weather', type: 'extension', name: 'Weather' });
+  index.entries.at(-1).versions[0].files = registryLimits.library.files + 1;
+  assert.deepEqual(validateRegistry('registry-index', index), { valid: true, errors: [] });
+  assert.equal(validateRegistry('registry-index', { ...index, entries: [{ ...index.entries[1], type: 'plugin' }] }).valid, false);
+});
 test('SemVer helpers', () => {
   const order = ['1.0.0-alpha', '1.0.0-alpha.1', '1.0.0-alpha.beta', '1.0.0-beta', '1.0.0-beta.2', '1.0.0-beta.11', '1.0.0-rc.1', '1.0.0', '1.0.1', '1.10.0', '2.0.0'];
   for (let i = 1; i < order.length; i++) { assert.equal(compareSemver(order[i - 1], order[i]), -1, `${order[i - 1]} < ${order[i]}`); assert.equal(compareSemver(order[i], order[i - 1]), 1); }

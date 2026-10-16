@@ -694,3 +694,13 @@ RFC-0010 shared clip library amendment). No object or world format change. IPC 0
 - `validateRegistry('content-lock', doc)` adds: one package per id and type, SemVer, the tag
   naming the version, SPDX licences, and `nixHash` being the SRI form of `sha256`
   (`sha256-` and the base64 of the digest). Example: `examples/registry/content-lock.json`.
+
+## Registry 0.1: `extension` reserved (RFC-0015)
+
+- `registry/v0.1/index.schema.json`: an entry's `type` may be `extension`, reserved for
+  RFC-0007 process extensions. No extension host exists yet: clients skip extension entries
+  (they are never listed or installed), and the official and community registries accept
+  none. Reserving the value now means an index that carries extensions later still
+  validates for clients built from this schema; their entries keep the package shape (release
+  assets, versions, hashes). Release records and the content lock stay `world` or `library`.
+- `validateRegistry` applies no archive limits to reserved types.
