@@ -2,7 +2,7 @@
 
 > **Hyprune** is an explorable, world-driven desktop environment for Hyprland: your workspaces become places you can walk through, with live windows on the walls. This repository holds the versioned **schemas** for world packages, IPC and manifests, and their validator. Install Hyprune through the [hyprune](https://github.com/hyprune/hyprune) repository (starter kits, Nix, Arch); learn more at [hyprune.com](https://hyprune.com). Licence: MIT.
 
-Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.9 and 0.11), the IPC protocol (0.1–0.28), object and library manifests (0.9 and 0.11; 0.10 an unreleased draft), motion packs (0.1), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
+Versioned contracts for Hyprune, a world-driven Hyprland desktop: world packages (formats 0.1–0.9 and 0.11), the IPC protocol (0.1–0.33), object and library manifests (0.9 and 0.11; 0.10 an unreleased draft), builder projects (0.1, 0.2), materials and primitives (0.1), motion packs (0.1), registry documents (0.1), extension and screen-type manifests and the input keymap. JSON Schema dialect: **2020-12**. Every version is frozen once published; core, the shell and the SDK pin these exact files. Readable reference: [hyprune.com/reference/schema](https://hyprune.com/reference/schema/).
 
 ## Install
 
@@ -40,11 +40,15 @@ Registry formats are versioned on their own, under `registry/v0.N/` (first: `0.1
 | --- | --- |
 | `registry/v0.1/index.schema.json` | An index (official, community registry or any third-party index). `$defs.entry` is one entry and the shape of a registry entry file, which may add a `$schema` pointer. |
 | `registry/v0.1/release-record.schema.json` | `<id>-<version>.release.json`, the record published with each release. |
-| `registry/v0.1/sources.schema.json` | `sources.json` and the read-only files listed in `HYPRUNE_SOURCES_FILES`. |
+| `registry/v0.1/sources.schema.json` | `content-sources.json` and the read-only files listed in `HYPRUNE_SOURCES_FILES`. |
+| `registry/v0.1/content-lock.schema.json` | A content lock: installed worlds and libraries at exact releases, for the Nix and Home Manager modules. |
+
+An entry's `type` is `world` or `library`; `extension` is reserved for RFC-0007 process
+extensions (clients skip such entries until an extension host exists).
 
 ```js
 import { validateRegistry, compareSemver, tagVersion } from '@hyprune/schema';
-validateRegistry('registry-index', index);   // also 'registry-entry', 'release-record', 'sources'
+validateRegistry('registry-index', index);   // also 'registry-entry', 'release-record', 'sources', 'content-lock'
 tagVersion('lumen-reach-v0.10.2');           // { name: 'lumen-reach', version: '0.10.2' }
 ```
 
@@ -264,6 +268,32 @@ IPC **0.28** (the RFC-0010 shared clip library amendment) adds character styles
 companion's dances (interaction type `dance` with `options`, `interaction.choose` `option`,
 activity `dancing`) and `catalogEntry.motion`. Every other 0.27 definition is unchanged.
 
+IPC **0.29** (motion feel) moves the keymap to input version 3 (`record.toggle` on Ctrl+R;
+Shift sprints, Ctrl goes down), adds `graphics.frame_pacing` (`even`, `max_rate`), the debug
+recording's statistics, the `recording` state key and `recording.label`, and the player feel
+settings (`look_inertia`, `move_inertia`, `view_bob_roll`, `carry_turn`, `carry_follow`).
+
+IPC **0.30** adds one global settings preset with user overrides: `settings.get` (state.read)
+and `settings.set` (world.control), each setting reported with its value, default and source.
+
+IPC **0.31** (builder primitives and materials) adds placement keys (`key`, `ifExists`), dry
+runs, asset swaps through `objects.configure` patch `ref`, required catalog `primitive`, error
+hints, and data-driven behaviours: `objects.configure` patch `behaviours` (scale, move,
+rotate, colour, glow, visible or texture driven by a data source) and the instances'
+`behaviours` states. Display only; placement rules keep the rest pose.
+
+IPC **0.32** (RFC-0015) adds `content.*`, `sources.*` and `registry.*`, the grant
+`content.control` and the `content` state key: core runs installs, updates, rollbacks, pins,
+removals and source changes as jobs with a plan to confirm. Every 0.31 definition is
+unchanged.
+
+IPC **0.33** (RFC-0016, AI-assisted creation) adds `session.pair` before hello and the
+**assistant profile** (a paired agent sees only its methods and state keys), the
+`connections.*` methods and `connections` state key for the shell, `assistant.report` (the
+change count, last action and a release draft for the HUD and the Builder page) and
+`preview.render` (a PNG from a pose). `companion.set` takes a `name`. From 0.33 no state key
+is required. Every other 0.32 definition is unchanged.
+
 ## Objects and libraries (RFC-0011)
 
 Object manifests (`object.json`) and library manifests (`library.json`) use the
@@ -280,7 +310,11 @@ ordinary objects are recommendations (warnings) below `objectHardCaps`; `import.
 (`v0.11/import.schema.json`, `validate('import', record)`) records how an object was imported.
 World format **0.11** (`v0.11/world.schema.json`) adds `atmosphere.panorama` and takes
 object format 0.11 assets; `v0.11/project.schema.json` (`validate('project', doc)`) describes a
-builder world folder's `builder/project.json` (RFC-0014).
+builder world folder's `builder/project.json` (RFC-0014): projectVersion 0.1, or 0.2 with the
+Open Plain starter, sky presets, a floor, placement keys and behaviours, and up to 512
+placements. `v0.11/material.schema.json` (`validate('material')`) is a builder material
+(colour, optional tiled texture and glow, licence) and `v0.11/primitive.schema.json`
+(`validate('primitive')`) records how a primitive object directory was generated.
 
 Motion packs (`motion/<id>/motion.json`, `motion/v0.1/motion.schema.json`, released in @hyprune/schema 0.14.0) hold clips on
 a named skeleton for every character with that skeleton: `validateMotion(doc)`,

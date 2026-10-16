@@ -588,7 +588,7 @@ which were drafts until now: character styles, companion dances and catalog moti
 RFC-0010 shared clip library amendment). No object or world format change. IPC 0.28 inherits
 0.27.
 
-## IPC 0.29 (draft): motion feel
+## IPC 0.29: motion feel
 
 - `inputConfig.version` is `3`: world mode binds `record.toggle` to `Ctrl+r` by default (a
   version 2 file gains it once, where it is free); sprint stays `Shift_L` and down `Control_L`
@@ -613,7 +613,7 @@ RFC-0010 shared clip library amendment). No object or world format change. IPC 0
 - No new event or grant; `session.hello` reports `0.29` and lists `recording.label`.
   Inheritance test included.
 
-## IPC 0.30 (draft): global settings presets and overrides
+## IPC 0.30: global settings presets and overrides
 
 - `settings.get` (state.read) and `settings.set` (world.control). One global preset (`auto`, `low`,
   `medium`, `high`, `ultra`, `usb-c`) gives every graphics and player setting a default; explicit
@@ -627,16 +627,16 @@ RFC-0010 shared clip library amendment). No object or world format change. IPC 0
 - `examples/input-v3.json`: the default keymap, input version 3.
 - No new event, grant or state key; `session.hello` reports `0.30` and lists both methods.
 
-## Builder project 0.2 (draft): Open Plain, sky presets, the floor
+## Builder project 0.2: Open Plain, sky presets, the floor
 
 - `v0.11/project.schema.json` (`validate('project')`) now takes `projectVersion` `0.1` (unchanged,
-  exact shape) or `0.2` (draft). 0.2 adds the `open-plain@0.2` starter (`flat-land@0.1` stays for
+  exact shape) or `0.2`. 0.2 adds the `open-plain@0.2` starter (`flat-land@0.1` stays for
   upgraded folders), `sky.preset` (a built-in sky's id, or null for the user's image), an optional
   `floor` `{preset, image, tile (0.25-100 m), license, author, source}` (exactly one of preset and
   image; the licence an SPDX expression) and up to 512 placements (0.1: 128).
 - No world format or IPC change.
 
-## IPC 0.31 (draft): primitives and materials in the builder
+## IPC 0.31: primitives and materials in the builder
 
 - **Placement keys** (`objectKey`, a slug of 1-48 characters, unique among the world's
   placements): `objects.place {key?, ifExists?: "error" | "update"}`; `objects.transform`,
@@ -660,8 +660,8 @@ RFC-0010 shared clip library amendment). No object or world format change. IPC 0
   strength}, roughness, metallic, license, author, source}`. `v0.11/primitive.schema.json`
   (`validate('primitive')`, primitiveVersion 0.1): how a primitive object directory was generated
   `{shape, size, steps?, material {key, name, colour, textured, emissive, digest}, generator}`; catalog primitives carry the material's `glow`.
-- Builder project 0.2 (draft) placements take an optional unique `key`.
-- **Data-driven behaviours** (same draft): `objects.configure` patch `behaviours` (the whole list,
+- Builder project 0.2 placements take an optional unique `key`.
+- **Data-driven behaviours**: `objects.configure` patch `behaviours` (the whole list,
   at most 8, `[]` removes them; user placements only): each `behaviour` has a `key`, a
   `property` (`scale` per axis about an `anchor` face, `move` in metres, `rotate` in degrees
   about the anchor, `colour`, `glow` with a `colour`, `visible` with `above`/`below`, `texture`
@@ -672,7 +672,7 @@ RFC-0010 shared clip library amendment). No object or world format change. IPC 0
   pose. Builder project 0.2 placements carry `behaviours` (keys unique, min and max differ,
   visible needs a threshold).
 
-## IPC 0.32 (draft): content, sources and registry (RFC-0015)
+## IPC 0.32: content, sources and registry (RFC-0015)
 
 - Methods `content.install`, `content.confirm`, `content.cancel`, `content.update`,
   `content.rollback`, `content.pin`, `content.remove`, `sources.list`, `sources.add`,
@@ -705,7 +705,7 @@ RFC-0010 shared clip library amendment). No object or world format change. IPC 0
   assets, versions, hashes). Release records and the content lock stay `world` or `library`.
 - `validateRegistry` applies no archive limits to reserved types.
 
-## IPC 0.33 (draft): AI-assisted creation (RFC-0016)
+## IPC 0.33: AI-assisted creation (RFC-0016)
 
 - `session.pair {protocols, client, agent {name, version?}, profile: "assistant"}`, allowed
   before `session.hello` on an unauthenticated connection: core asks the user and answers with
@@ -725,3 +725,15 @@ RFC-0010 shared clip library amendment). No object or world format change. IPC 0
   own); `assistant.report` takes `releaseDraft {projectId, version?, notes?}` (null clears it), shown
   on the live connection (`connectionLive.releaseDraft`) for the Builder page's Release form.
 - Every other 0.32 definition is unchanged (`test/assistant-ipc.test.mjs`).
+
+## 0.15.0 — 2026-10-16
+
+Publishes IPC 0.29, 0.30, 0.31, 0.32 and 0.33, builder project 0.2, builder materials
+(`v0.11/material.schema.json`, materialVersion 0.1) and generated primitives
+(`v0.11/primitive.schema.json`, primitiveVersion 0.1), which were drafts until now: player
+feel settings, frame pacing and the debug recording (0.29), global settings presets (0.30),
+placement keys, dry runs, asset swaps, catalog primitives and data-driven behaviours (0.31),
+content, sources and registry methods (0.32, RFC-0015), and AI-assisted creation (0.33,
+RFC-0016: pairing, the assistant profile, connections, `assistant.report` and
+`preview.render`). Registry 0.1 gains the content lock and reserves the `extension` entry
+type. No world or object format change. Each IPC version inherits the one before it.
