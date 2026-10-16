@@ -54,7 +54,7 @@ test('connections: answer, revoke, disconnect, pause; the state key',()=>{
  assert.ok(req('connections.disconnect',{actor:'a1b2'}));assert.ok(res('connections.disconnect',{disconnected:false}));
  assert.ok(req('connections.pause',{actor:'a1b2',paused:true}));assert.ok(res('connections.pause',{paused:true}));
  const connections={pending:[{requestId:'p-0a1b',clientId:'com.hyprune.mcp',clientName:'Hyprune MCP server',agent:{name:'Example Chat',version:'1.4'},profile:'assistant',expiresInMs:118000}],
-  live:[{actor:'a1b2',clientId:'com.hyprune.mcp',agent:{name:'Example Chat'},profile:'assistant',connectedMs:5200,changes:12,action:'placed cpu-tower',paused:false,remembered:true}],
+  live:[{actor:'a1b2',clientId:'com.hyprune.mcp',agent:{name:'Example Chat'},profile:'assistant',connectedMs:5200,changes:12,action:'placed cpu-tower',paused:false,remembered:true,releaseDraft:null}],
   approvals:[{clientId:'com.hyprune.mcp',agent:'Example Chat',profile:'assistant',approvedAt:'2026-10-16T03:00:00Z'}]};
  const delta=changes=>validate('ipc',{jsonrpc:'2.0',method:'state.delta',params:{subscriptionId:'s',sessionId:'x',baseRevision:1,revision:2,changes}},undefined,'0.33').valid;
  assert.ok(delta({connections}));
