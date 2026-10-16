@@ -674,3 +674,13 @@ RFC-0010 shared clip library amendment). No object or world format change. IPC 0
   `contentPlanPackage`, `registryEntry` and `registryVersion`. Job stages have no `pending`:
   0.32 has no pending swaps of the loaded world (`content.commit` comes later).
 - Every 0.31 definition is unchanged (`test/content-ipc.test.mjs`).
+
+## Registry 0.1: the content lock (RFC-0015 P3)
+
+- `registry/v0.1/content-lock.schema.json`: `{lockVersion: "0.1", generated, packages}`, each
+  package an installed world or library at an exact release (`id`, `type`, `version`, `tag`,
+  an https `url`, `sha256`, `nixHash` and the source it came from), written by
+  `hyprune content lock` for the Nix and Home Manager modules' declarative installs.
+- `validateRegistry('content-lock', doc)` adds: one package per id and type, SemVer, the tag
+  naming the version, SPDX licences, and `nixHash` being the SRI form of `sha256`
+  (`sha256-` and the base64 of the digest). Example: `examples/registry/content-lock.json`.

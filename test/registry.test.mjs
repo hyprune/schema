@@ -1,4 +1,4 @@
-// RFC-0015 registry documents: index, entry file, release record and sources.json.
+// RFC-0015 registry documents: index, entry file, release record, sources.json and the content lock.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
@@ -6,7 +6,7 @@ import { spawnSync } from 'node:child_process';
 import { validateRegistry, registryVersions, registryLimits, parseSemver, compareSemver, tagVersion } from '../lib/validate.mjs';
 const dir = new URL('../examples/registry/', import.meta.url);
 const fixture = name => JSON.parse(readFileSync(new URL(name, dir)));
-const kinds = { 'index.json': 'registry-index', 'entry.json': 'registry-entry', 'release-record.json': 'release-record', 'sources.json': 'sources' };
+const kinds = { 'index.json': 'registry-index', 'entry.json': 'registry-entry', 'release-record.json': 'release-record', 'sources.json': 'sources', 'content-lock.json': 'content-lock' };
 
 test('registry versions are discovered from registry/v0.N', () => assert.deepEqual(registryVersions, ['0.1']));
 for (const [file, kind] of Object.entries(kinds))
@@ -80,4 +80,21 @@ test('CLI validates registry kinds', () => {
   assert.equal(run('release-record', 'examples/registry/release-record.json').status, 0);
   const bad = run('sources', 'examples/registry/invalid/sources--reserved-id.json');
   assert.equal(bad.status, 1); assert.match(bad.stderr, /reserved for a built-in source/);
+});
+
+test('content lock 0.1: packages with their fixed-output hashes', () => {
+  const sha = '832cac3adeddc1873486f56b0ed25cf560c5d69d64453aac9c58f68305157ec3';
+  const nix = 'sha256-' + Buffer.from(sha, 'hex').toString('base64');
+  const pkg = { id: 'com.hyprune.starter', type: 'library', version: '0.3.0', tag: 'hyprune-starter-v0.3.0',
+    url: 'https://github.com/hyprune/worlds/releases/download/hyprune-starter-v0.3.0/com.hyprune.starter-0.3.0.tar.zst',
+    sha256: sha, nixHash: nix, sourceId: 'official', sourceLabel: 'Official', license: 'CC-BY-4.0' };
+  const lock = { lockVersion: '0.1', generated: '2026-10-16T08:00:00Z', packages: [pkg, { ...pkg, id: 'io.github.ada.tidepool', type: 'world', version: '1.2.0', tag: 'v1.2.0', sourceId: 'community', sourceLabel: 'Community registry' }] };
+  assert.deepEqual(validateRegistry('content-lock', lock), { valid: true, errors: [] });
+  const bad = (p, why) => assert.equal(validateRegistry('content-lock', { lockVersion: '0.1', packages: p }).valid, false, why);
+  bad([pkg, pkg], 'one id per type');
+  bad([{ ...pkg, nixHash: 'sha256-' + Buffer.alloc(32).toString('base64') }], 'nixHash must match sha256');
+  bad([{ ...pkg, tag: 'v0.2.0' }], 'the tag names the version');
+  bad([{ ...pkg, url: 'http://example.org/x.tar.zst' }], 'https only');
+  bad([{ ...pkg, extra: 1 }], 'no extra keys');
+  assert.equal(validateRegistry('content-lock', { lockVersion: '0.1', packages: [{ ...pkg, type: 'library', id: 'io.github.ada.tidepool' }, { ...pkg, type: 'world', id: 'io.github.ada.tidepool', version: '1.2.0', tag: 'v1.2.0' }] }).valid, true, 'same id, two types');
 });

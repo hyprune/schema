@@ -82,7 +82,7 @@ export const worldLimits: Readonly<{ characters: number; charactersPerPath: numb
 export function sceneExtensions(version: string): string[];
 
 /** Registry document kinds (RFC-0015). `registry-entry` is one index entry (a registry entry file may add `$schema`). */
-export type RegistryKind = 'registry-index' | 'registry-entry' | 'release-record' | 'sources';
+export type RegistryKind = 'registry-index' | 'registry-entry' | 'release-record' | 'sources' | 'content-lock';
 /**
  * Validate a registry document against `registry/v<version>/` (default: the newest) plus the
  * semantic rules: unique ids, versions unique and newest first (SemVer), tags naming their
