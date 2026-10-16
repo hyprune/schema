@@ -721,4 +721,7 @@ RFC-0010 shared clip library amendment). No object or world format change. IPC 0
   `connectionRequest`, `connectionLive` and `connectionApproval`. From 0.33 no state key is
   required: a peer with the assistant profile receives only `builder`, `objects`, `live`,
   `quests`, `companion`, `content`, `world`, `location` and `movement`.
+- E2: `companion.set` takes an optional `name` (1 to 32 characters, null for the character's
+  own); `assistant.report` takes `releaseDraft {projectId, version?, notes?}` (null clears it), shown
+  on the live connection (`connectionLive.releaseDraft`) for the Builder page's Release form.
 - Every other 0.32 definition is unchanged (`test/assistant-ipc.test.mjs`).

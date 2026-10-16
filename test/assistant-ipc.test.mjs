@@ -10,12 +10,12 @@ const read=path=>JSON.parse(readFileSync(new URL(`../${path}`,import.meta.url)))
 const schema=v=>read(`v${v}/ipc.schema.json`);
 const strip=(o,...keys)=>Object.fromEntries(Object.entries(o).filter(([k])=>!keys.includes(k)));
 const METHODS=['session.pair','connections.answer','connections.revoke','connections.disconnect','connections.pause','assistant.report','preview.render'];
-const SHAPES=['agent','connectionRequest','connectionLive','connectionApproval','connections'];
+const SHAPES=['agent','connectionRequest','connectionLive','connectionApproval','connections','releaseDraft'];
 
 test('IPC 0.33 inherits every 0.32 definition except hello, request, response and state; adds pairing, connections and previews',()=>{
  const old=schema('0.32'),latest=schema('0.33');
  assert.equal(latest.$id,'https://hyprune.com/schema/v0.33/ipc.schema.json');
- const changed=['session.hello.result','request','response','state','state.delta.notification'];
+ const changed=['session.hello.result','request','response','state','state.delta.notification','companion.set.params'];
  for(const key of Object.keys(old.$defs))if(!changed.includes(key))assert.deepEqual(latest.$defs[key],old.$defs[key],key);
  const added=Object.keys(latest.$defs).filter(k=>!(k in old.$defs));
  assert.deepEqual(added.filter(k=>!SHAPES.includes(k)).sort(),METHODS.flatMap(m=>['params','result','request','response'].map(s=>`${m}.${s}`)).sort());
@@ -60,6 +60,16 @@ test('connections: answer, revoke, disconnect, pause; the state key',()=>{
  assert.ok(delta({connections}));
  assert.ok(delta({builder:null}),'an assistant peer may see few keys');
  assert.ok(!delta({connections:{...connections,live:[{...connections.live[0],profile:'shell'}]}}));
+});
+
+test('E2: companion names, release drafts in assistant.report and the live connection',()=>{
+ assert.ok(req('companion.set',{ref:'library/com.hyprune.companions@0.1.0/fox',name:'Ember'}));
+ assert.ok(req('companion.set',{ref:'library/com.hyprune.companions@0.1.0/fox',name:null}));
+ assert.ok(!req('companion.set',{ref:'library/com.hyprune.companions@0.1.0/fox',name:'x'.repeat(33)}));
+ assert.ok(!req('companion.set',{ref:'library/com.hyprune.companions@0.1.0/fox',name:'Ember'},'0.32'),'names from 0.33');
+ assert.ok(req('assistant.report',{changes:9,releaseDraft:{projectId:'rooftop-garden',version:'0.2.0',notes:'The garden'}}));
+ assert.ok(req('assistant.report',{changes:9,releaseDraft:null}));
+ assert.ok(!req('assistant.report',{changes:9,releaseDraft:{projectId:'rooftop-garden',version:'v1'}}));
 });
 
 test('assistant.report and preview.render',()=>{
