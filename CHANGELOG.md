@@ -704,3 +704,21 @@ RFC-0010 shared clip library amendment). No object or world format change. IPC 0
   validates for clients built from this schema; their entries keep the package shape (release
   assets, versions, hashes). Release records and the content lock stay `world` or `library`.
 - `validateRegistry` applies no archive limits to reserved types.
+
+## IPC 0.33 (draft): AI-assisted creation (RFC-0016)
+
+- `session.pair {protocols, client, agent {name, version?}, profile: "assistant"}`, allowed
+  before `session.hello` on an unauthenticated connection: core asks the user and answers with
+  `{token, profile, remembered}` (a one-use token for this connection) or `-32002` (rule
+  `pair.denied`). `session.hello` with the token binds the **assistant profile**: hello's result
+  gains `profile: "assistant"` and lists only the profile's methods.
+- `connections.answer {requestId, decision: once|always|deny}`, `connections.revoke {clientId,
+  agent}`, `connections.disconnect {actor}` and `connections.pause {actor, paused}` (shell.control);
+  `assistant.report {changes, action?}` (the assistant's change count and last action for the HUD;
+  answers `{paused, changes}`); `preview.render {pose {position, yaw?, pitch?}, fov?, size?}` ->
+  `{path, width, height, pose, fov, renderMs}` (a PNG in the runtime directory).
+- State key `connections {pending, live, approvals}` (shell.control peers only), with `agent`,
+  `connectionRequest`, `connectionLive` and `connectionApproval`. From 0.33 no state key is
+  required: a peer with the assistant profile receives only `builder`, `objects`, `live`,
+  `quests`, `companion`, `content`, `world`, `location` and `movement`.
+- Every other 0.32 definition is unchanged (`test/assistant-ipc.test.mjs`).
